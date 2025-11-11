@@ -3,7 +3,11 @@
 
 class ApiService {
   constructor() {
-    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api'; // Django backend URL
+    // Use production API URL by default, fallback to development
+    this.baseURL = process.env.REACT_APP_API_URL || 
+                   (process.env.NODE_ENV === 'production' 
+                     ? 'https://api.shashwativf.com/api' 
+                     : 'http://localhost:8000/api');
     this.headers = {
       'Content-Type': 'application/json',
     };
