@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaAward, FaGraduationCap, FaGlobe, FaMedal, FaUserMd } from 'react-icons/fa';
 import Section from '../components/common/Section';
-import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { useLeaders } from '../hooks/useApi';
 import { doctors } from '../data/doctors';
 import { FaHeart } from 'react-icons/fa';
@@ -61,6 +61,20 @@ const LeadersPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner size="xl" />
         </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Our Leaders | Shashwat IVF</title>
+        </Helmet>
+        <PageError 
+          message="We couldn't load the leadership team profiles." 
+          onRetry={() => window.location.reload()} 
+        />
       </>
     );
   }

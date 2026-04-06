@@ -8,6 +8,7 @@ import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { useBlogPosts } from '../hooks/useApi';
 import { blogPosts, blogCategories } from '../data/blog';
 
@@ -39,6 +40,20 @@ const BlogPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner size="xl" />
         </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Blog | Shashwat IVF</title>
+        </Helmet>
+        <PageError 
+          message="We couldn't load the articles. Please check your connection." 
+          onRetry={() => window.location.reload()} 
+        />
       </>
     );
   }

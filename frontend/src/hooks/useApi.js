@@ -24,7 +24,8 @@ export const useApiData = (apiMethod, dependencies = []) => {
     };
 
     fetchData();
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiMethod, ...dependencies]);
 
   return { data, loading, error };
 };

@@ -9,7 +9,7 @@ import { useLeaders } from '../../hooks/useApi';
 import { doctors } from '../../data/doctors';
 
 const LeadersSection = () => {
-  const { data: leaders, loading, error } = useLeaders();
+  const { data: leaders, loading } = useLeaders();
   
   // Fallback to mock data if API fails
   const displayLeaders = leaders?.length > 0 ? leaders : doctors.filter(doctor => doctor.isLeader);

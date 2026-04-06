@@ -7,6 +7,7 @@ import Section from '../components/common/Section';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { PrimaryButton, SecondaryButton } from '../components/common/Button';
 import { useService } from '../hooks/useApi';
 import { services } from '../data/services';
@@ -23,6 +24,15 @@ const ServiceDetailPage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="xl" />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageError 
+        message="We couldn't retrieve the details for this service." 
+        onRetry={() => window.location.reload()} 
+      />
     );
   }
 

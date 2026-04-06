@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaUserMd, FaUserNurse, FaUsers, FaCog, FaHeart } from 'react-icons/fa';
 import Section from '../components/common/Section';
-import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { useTeamMembers } from '../hooks/useApi';
 import { teamMembers } from '../data/doctors';
 
@@ -82,6 +82,20 @@ const TeamPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner size="xl" />
         </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Our Team | Shashwat IVF</title>
+        </Helmet>
+        <PageError 
+          message="We couldn't load the team profiles at this time." 
+          onRetry={() => window.location.reload()} 
+        />
       </>
     );
   }

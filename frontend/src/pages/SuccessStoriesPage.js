@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaHeart, FaQuoteLeft, FaFilter, FaBaby } from 'react-icons/fa';
 import Section from '../components/common/Section';
-import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { useSuccessStories } from '../hooks/useApi';
 import { successStories, storyCategories } from '../data/stories';
 
@@ -30,6 +30,20 @@ const SuccessStoriesPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner size="xl" />
         </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Success Stories | Shashwat IVF</title>
+        </Helmet>
+        <PageError 
+          message="We couldn't load the success stories. Please check back later." 
+          onRetry={() => window.location.reload()} 
+        />
       </>
     );
   }

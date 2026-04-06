@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaFlask, FaSnowflake, FaSyringe, FaMale, FaVenus, FaHeart, FaGift, FaUsers } from 'react-icons/fa';
 import Section from '../components/common/Section';
-import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { useServices } from '../hooks/useApi';
 import { services, serviceCategories } from '../data/services';
 
@@ -47,6 +47,20 @@ const ServicesPage = () => {
         <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner size="xl" />
         </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Our Services | Shashwat IVF</title>
+        </Helmet>
+        <PageError 
+          message="We encountered an issue while loading our services." 
+          onRetry={() => window.location.reload()} 
+        />
       </>
     );
   }

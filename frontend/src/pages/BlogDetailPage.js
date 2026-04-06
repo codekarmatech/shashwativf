@@ -7,6 +7,7 @@ import Section from '../components/common/Section';
 import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import PageError from '../components/common/PageError';
 import { PrimaryButton } from '../components/common/Button';
 import { useBlogPost } from '../hooks/useApi';
 import { blogPosts } from '../data/blog';
@@ -25,6 +26,15 @@ const BlogDetailPage = () => {
           <LoadingSpinner size="xl" />
         </div>
       </Section>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageError 
+        message="We encountered an issue while loading this article." 
+        onRetry={() => window.location.reload()} 
+      />
     );
   }
 

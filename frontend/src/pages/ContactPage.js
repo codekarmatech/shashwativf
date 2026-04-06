@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCalendarAlt, FaExclamationTriangle, FaUsers } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import Section from '../components/common/Section';
 import SectionHeader from '../components/common/SectionHeader';
 import GradientCard from '../components/common/GradientCard';

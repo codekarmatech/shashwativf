@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight, FaQuoteLeft } from 'react-icons/fa';
 import GradientCard from '../common/GradientCard';
 import Pill from '../common/Pill';

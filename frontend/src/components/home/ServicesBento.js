@@ -19,7 +19,7 @@ import { useServices } from '../../hooks/useApi';
 import { services } from '../../data/services';
 
 const ServicesBento = () => {
-  const { data: apiServices, loading, error } = useServices();
+  const { data: apiServices, loading } = useServices();
   
   // Fallback to mock data if API fails
   const displayServices = apiServices?.length > 0 ? apiServices : services;

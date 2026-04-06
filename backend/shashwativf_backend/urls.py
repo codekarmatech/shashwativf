@@ -15,9 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+
+from core.views import serve_frontend_with_seo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +28,12 @@ urlpatterns = [
     path('api/blog/', include('blog.urls')),
     path('api/media/', include('media.urls')),
     path('api/contact/', include('contact.urls')),
+    
+    # API and Admin are handled above.
+    # The catch-all for React frontend with dynamic SEO
+    # We move the catch-all to only trigger if it doesn't start with admin or api
+    path('', serve_frontend_with_seo, name='frontend_root'),
+    re_path(r'^(?!admin|api|static|media).*$', serve_frontend_with_seo, name='frontend_catch_all'),
 ]
 
 # Serve media files during development
