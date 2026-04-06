@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import RootLayout from './layout/RootLayout';
 import HomePage from './pages/HomePage';
@@ -31,7 +31,8 @@ function App() {
             <Route path="stories" element={<SuccessStoriesPage />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<BlogDetailPage />} />
-            <Route path="media" element={<MediaPage />} />
+            <Route path="mediacoverage" element={<MediaPage />} />
+            <Route path="media" element={<Navigate to="/mediacoverage" replace />} />
             <Route path="contact" element={<ContactPage />} />
             {/* Additional routes will be added here */}
             <Route path="*" element={<div className="min-h-screen flex items-center justify-center"><div className="text-center"><h1 className="text-2xl font-bold text-brand-ink mb-4">Page Coming Soon</h1><p className="text-brand-muted">This page is under construction.</p></div></div>} />
