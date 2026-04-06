@@ -136,7 +136,14 @@ jspm_packages/
 *.bak
 *.backup
 
-# Text files (if not needed)
+# Text files
 frontend design.txt
 instructions.txt
-backend/venv
+*.txt
+
+# Virtual Environments
+backend/venv/
+venv/
+env/
+.venv/
+.env/
