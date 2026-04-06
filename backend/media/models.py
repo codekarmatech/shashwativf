@@ -26,7 +26,14 @@ class MediaVideo(models.Model):
         null=True,
         help_text="Upload local video file (MP4, WebM, etc.) - Use this OR YouTube ID, not both"
     )
-    category = models.CharField(max_length=100, default='General')
+    category = models.ForeignKey(
+        'categories.MediaVideoCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='videos',
+        help_text="Select a video category"
+    )
     
     # Size controls for frontend display
     display_size = models.CharField(
@@ -98,7 +105,14 @@ class MediaPhoto(models.Model):
         help_text="Upload high-resolution photo"
     )
     thumbnail = models.ImageField(upload_to='media/thumbnails/', blank=True)
-    category = models.CharField(max_length=100, default='General')
+    category = models.ForeignKey(
+        'categories.MediaPhotoCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='photos',
+        help_text="Select a photo category"
+    )
     
     # Size and layout controls for frontend display
     display_size = models.CharField(
@@ -166,7 +180,14 @@ class MediaPhoto(models.Model):
 class AcademicExcellence(models.Model):
     title = models.CharField(max_length=300)
     description = models.TextField()
-    category = models.CharField(max_length=100, default='General')
+    category = models.ForeignKey(
+        'categories.AcademicExcellenceCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='achievements',
+        help_text="Select a category"
+    )
     highlight = models.CharField(
         max_length=100, 
         blank=True, 
@@ -192,7 +213,14 @@ class GlobalMission(models.Model):
     title = models.CharField(max_length=300)
     description = models.TextField()
     location = models.CharField(max_length=200)
-    category = models.CharField(max_length=100, default='General')
+    category = models.ForeignKey(
+        'categories.GlobalMissionCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='missions',
+        help_text="Select a category"
+    )
     beneficiaries = models.CharField(
         max_length=100, 
         blank=True,
