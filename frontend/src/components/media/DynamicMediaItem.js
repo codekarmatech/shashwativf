@@ -1,61 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import {
+  getPhotoSizing,
+  getVideoEmbedUrl,
+  getVideoSizing,
+  resolveMediaUrl,
+} from '../../utils/media';
 
 const DynamicMediaItem = ({ item, type = 'photo' }) => {
   // Get size configuration from backend
   const getSizeClasses = () => {
     if (type === 'photo') {
-      const { display_size, collage_position, width_pixels, height_pixels, border_radius } = item;
-      
-      // Use custom dimensions if provided, otherwise use preset sizes
-      if (width_pixels && height_pixels) {
-        return {
-          width: `${width_pixels}px`,
-          height: `${height_pixels}px`,
-          borderRadius: `${border_radius || 12}px`
-        };
-      }
-      
-      // Preset size classes
-      const sizeMap = {
-        'thumbnail': { width: '150px', height: '150px' },
-        'small': { width: '250px', height: '200px' },
-        'medium': { width: '400px', height: '300px' },
-        'large': { width: '600px', height: '450px' },
-        'extra_large': { width: '800px', height: '600px' },
-        'full_width': { width: '100%', height: 'auto' },
-        'square_small': { width: '200px', height: '200px' },
-        'square_medium': { width: '300px', height: '300px' },
-        'square_large': { width: '500px', height: '500px' },
-      };
-      
-      return {
-        ...sizeMap[display_size] || sizeMap.medium,
-        borderRadius: `${border_radius || 12}px`
-      };
+      return getPhotoSizing(item);
     }
     
     if (type === 'video') {
-      const { display_size, width_percentage, height_pixels } = item;
-      
-      // Use custom dimensions if provided
-      if (width_percentage && height_pixels) {
-        return {
-          width: `${width_percentage}%`,
-          height: `${height_pixels}px`
-        };
-      }
-      
-      // Preset video size classes
-      const sizeMap = {
-        'small': { width: '300px', height: '200px' },
-        'medium': { width: '400px', height: '300px' },
-        'large': { width: '600px', height: '400px' },
-        'extra_large': { width: '800px', height: '500px' },
-        'full_width': { width: '100%', height: '400px' },
-      };
-      
-      return sizeMap[display_size] || sizeMap.medium;
+      return getVideoSizing(item);
     }
   };
   
@@ -79,6 +39,8 @@ const DynamicMediaItem = ({ item, type = 'photo' }) => {
   const gridClasses = getGridSpanClasses();
   
   if (type === 'photo') {
+    const imageUrl = resolveMediaUrl(item.thumbnail_url || item.image_url || item.thumbnail || item.image || item.url);
+
     return (
       <motion.div
         className={`relative overflow-hidden ${gridClasses}`}
@@ -87,7 +49,7 @@ const DynamicMediaItem = ({ item, type = 'photo' }) => {
         transition={{ duration: 0.3 }}
       >
         <img
-          src={item.thumbnail || item.image || item.url}
+          src={imageUrl}
           alt={item.title}
           className="w-full h-full object-cover"
           style={{ borderRadius: sizeStyles.borderRadius }}
@@ -105,17 +67,21 @@ const DynamicMediaItem = ({ item, type = 'photo' }) => {
   }
   
   if (type === 'video') {
+    const { cardStyle, frameStyle } = sizeStyles;
+    const embedUrl = getVideoEmbedUrl(item);
+
     return (
       <motion.div
         className="relative overflow-hidden rounded-xl"
-        style={sizeStyles}
+        style={cardStyle}
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
       >
         <iframe
-          src={`https://www.youtube.com/embed/${item.youtube_id}`}
+          src={embedUrl}
           title={item.title}
           className="w-full h-full"
+          style={frameStyle}
           frameBorder="0"
           allowFullScreen
         />

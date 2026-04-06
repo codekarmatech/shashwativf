@@ -1,6 +1,47 @@
+from io import BytesIO
+from pathlib import Path
+import re
+from urllib.parse import parse_qs, urlparse
+
+from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.db import models
 from PIL import Image
-import os
+
+
+YOUTUBE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+
+
+def extract_youtube_video_id(value):
+    if not value:
+        return None
+
+    candidate = str(value).strip()
+    if not candidate:
+        return None
+
+    parsed = urlparse(candidate)
+    video_id = None
+
+    if parsed.scheme and parsed.netloc:
+        host = parsed.netloc.lower()
+        path_parts = [part for part in parsed.path.split('/') if part]
+
+        if host in {'youtu.be', 'www.youtu.be'}:
+            video_id = path_parts[0] if path_parts else None
+        elif host.endswith('youtube.com') or host.endswith('youtube-nocookie.com'):
+            if parsed.path == '/watch':
+                video_id = parse_qs(parsed.query).get('v', [None])[0]
+            elif len(path_parts) >= 2 and path_parts[0] in {'embed', 'shorts', 'live', 'v'}:
+                video_id = path_parts[1]
+    else:
+        video_id = candidate
+
+    if video_id:
+        video_id = video_id.split('&', 1)[0].split('?', 1)[0].strip()
+
+    return video_id if video_id and YOUTUBE_ID_RE.fullmatch(video_id) else None
+
 
 class MediaVideo(models.Model):
     
@@ -15,10 +56,10 @@ class MediaVideo(models.Model):
     title = models.CharField(max_length=300)
     description = models.TextField()
     youtube_id = models.CharField(
-        max_length=50, 
+        max_length=255,
         blank=True,
         null=True,
-        help_text="YouTube video ID (e.g., dQw4w9WgXcQ) - Leave empty if uploading local video"
+        help_text="Paste a YouTube URL or video ID (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
     )
     video_file = models.FileField(
         upload_to='media/videos/',
@@ -43,12 +84,14 @@ class MediaVideo(models.Model):
         help_text="Size of video player on frontend"
     )
     width_percentage = models.IntegerField(
-        default=100, 
-        help_text="Width as percentage (1-100) for custom sizing"
+        blank=True,
+        null=True,
+        help_text="Optional custom width percentage (1-100). Leave empty to use display size presets."
     )
     height_pixels = models.IntegerField(
-        default=300, 
-        help_text="Height in pixels for video player"
+        blank=True,
+        null=True,
+        help_text="Optional custom height in pixels. Leave empty to use display size presets."
     )
     
     date = models.DateField()
@@ -60,16 +103,49 @@ class MediaVideo(models.Model):
         ordering = ['order', '-date']
         verbose_name = 'Media Video'
         verbose_name_plural = 'Media Videos'
+
+    @property
+    def youtube_video_id(self):
+        return extract_youtube_video_id(self.youtube_id)
+
+    @property
+    def youtube_embed_url(self):
+        return (
+            f'https://www.youtube.com/embed/{self.youtube_video_id}'
+            if self.youtube_video_id else None
+        )
+
+    @property
+    def youtube_thumbnail_url(self):
+        return (
+            f'https://img.youtube.com/vi/{self.youtube_video_id}/hqdefault.jpg'
+            if self.youtube_video_id else None
+        )
     
     def clean(self):
-        from django.core.exceptions import ValidationError
+        self.youtube_id = self.youtube_id.strip() if self.youtube_id else None
+        if self.youtube_id:
+            normalized_video_id = extract_youtube_video_id(self.youtube_id)
+            if not normalized_video_id:
+                raise ValidationError({'youtube_id': 'Enter a valid YouTube URL or 11-character video ID.'})
+            self.youtube_id = normalized_video_id
+
         if not self.youtube_id and not self.video_file:
-            raise ValidationError('Either YouTube ID or video file must be provided.')
+            raise ValidationError('Either a YouTube URL/ID or a video file must be provided.')
         if self.youtube_id and self.video_file:
-            raise ValidationError('Provide either YouTube ID or video file, not both.')
+            raise ValidationError('Provide either a YouTube URL/ID or a video file, not both.')
+
+        has_custom_width = self.width_percentage is not None
+        has_custom_height = self.height_pixels is not None
+        if has_custom_width != has_custom_height:
+            raise ValidationError('Set both width percentage and height pixels to use custom video dimensions.')
+        if self.width_percentage is not None and not 1 <= self.width_percentage <= 100:
+            raise ValidationError({'width_percentage': 'Width percentage must be between 1 and 100.'})
+        if self.height_pixels is not None and self.height_pixels <= 0:
+            raise ValidationError({'height_pixels': 'Height must be greater than 0.'})
     
     def save(self, *args, **kwargs):
-        self.clean()
+        self.full_clean()
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -128,12 +204,14 @@ class MediaPhoto(models.Model):
         help_text="Position in collage layout (grid size)"
     )
     width_pixels = models.IntegerField(
-        default=400, 
-        help_text="Custom width in pixels (overrides display_size if set)"
+        blank=True,
+        null=True,
+        help_text="Optional custom width in pixels. Leave empty to use display size presets."
     )
     height_pixels = models.IntegerField(
-        default=300, 
-        help_text="Custom height in pixels (overrides display_size if set)"
+        blank=True,
+        null=True,
+        help_text="Optional custom height in pixels. Leave empty to use display size presets."
     )
     border_radius = models.IntegerField(
         default=12, 
@@ -152,29 +230,54 @@ class MediaPhoto(models.Model):
     
     def __str__(self):
         return self.title
+
+    def clean(self):
+        has_custom_width = self.width_pixels is not None
+        has_custom_height = self.height_pixels is not None
+        if has_custom_width != has_custom_height:
+            raise ValidationError('Set both width and height to use custom photo dimensions.')
+        if self.width_pixels is not None and self.width_pixels <= 0:
+            raise ValidationError({'width_pixels': 'Width must be greater than 0.'})
+        if self.height_pixels is not None and self.height_pixels <= 0:
+            raise ValidationError({'height_pixels': 'Height must be greater than 0.'})
+        if self.border_radius < 0:
+            raise ValidationError({'border_radius': 'Border radius cannot be negative.'})
+
+    def _thumbnail_upload_path(self):
+        image_name = Path(self.image.name).stem
+        return f'media/thumbnails/{image_name}-thumb.jpg'
+
+    def _build_thumbnail(self):
+        self.image.open('rb')
+        try:
+            with Image.open(self.image) as img:
+                if img.mode in ('RGBA', 'P'):
+                    img = img.convert('RGB')
+
+                img.thumbnail((300, 300), Image.Resampling.LANCZOS)
+                output = BytesIO()
+                img.save(output, format='JPEG', quality=85, optimize=True)
+                return ContentFile(output.getvalue())
+        finally:
+            self.image.close()
     
     def save(self, *args, **kwargs):
+        previous_image_name = None
+        if self.pk:
+            previous = type(self).objects.filter(pk=self.pk).only('image').first()
+            if previous and previous.image:
+                previous_image_name = previous.image.name
+
+        self.full_clean()
         super().save(*args, **kwargs)
-        
-        # Auto-generate thumbnail
-        if self.image and not self.thumbnail:
-            img_path = self.image.path
-            if os.path.exists(img_path):
-                with Image.open(img_path) as img:
-                    # Convert to RGB if necessary
-                    if img.mode in ("RGBA", "P"):
-                        img = img.convert("RGB")
-                    
-                    # Create thumbnail
-                    img.thumbnail((300, 300), Image.Resampling.LANCZOS)
-                    
-                    # Save thumbnail
-                    thumb_path = img_path.replace('/photos/', '/thumbnails/')
-                    os.makedirs(os.path.dirname(thumb_path), exist_ok=True)
-                    img.save(thumb_path, quality=85, optimize=True)
-                    
-                    # Update thumbnail field
-                    self.thumbnail = thumb_path.replace(str(self.image.storage.location), '')
+
+        should_generate_thumbnail = bool(
+            self.image and (not self.thumbnail or self.image.name != previous_image_name)
+        )
+        if should_generate_thumbnail:
+            thumbnail_content = self._build_thumbnail()
+            self.thumbnail.save(self._thumbnail_upload_path(), thumbnail_content, save=False)
+            super().save(update_fields=['thumbnail'])
 
 
 class AcademicExcellence(models.Model):

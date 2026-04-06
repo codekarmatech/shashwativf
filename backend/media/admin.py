@@ -12,11 +12,11 @@ class MediaVideoAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Video Information', {
             'fields': ('title', 'description', 'youtube_id', 'video_file'),
-            'description': 'Use either YouTube ID OR upload video file, not both'
+            'description': 'Use either a YouTube URL/ID OR upload a video file, not both'
         }),
         ('Display Settings', {
             'fields': ('display_size', 'width_percentage', 'height_pixels'),
-            'description': 'Control how the video appears on the frontend'
+            'description': 'Leave custom dimensions empty to use the selected display size preset'
         }),
         ('Classification', {
             'fields': ('category', 'date', 'featured', 'order')
@@ -38,7 +38,7 @@ class MediaPhotoAdmin(admin.ModelAdmin):
         }),
         ('Display Settings', {
             'fields': ('display_size', 'collage_position', 'width_pixels', 'height_pixels', 'border_radius'),
-            'description': 'Control how the image appears in the collage layout'
+            'description': 'Leave custom dimensions empty to use the selected display size preset'
         }),
         ('Classification', {
             'fields': ('category', 'date', 'featured', 'order')
