@@ -138,6 +138,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(BASE_DIR, 'staticfiles'))
 
+# Include frontend build static files for collectstatic
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR.parent, 'frontend', 'build', 'static'),
+]
+
 # Media files (User uploaded content)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media'))
