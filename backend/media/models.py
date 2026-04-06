@@ -44,6 +44,12 @@ def extract_youtube_video_id(value):
 
 
 class MediaVideo(models.Model):
+    CONTENT_SOURCE_YOUTUBE = 'youtube'
+    CONTENT_SOURCE_VIDEO_FILE = 'video_file'
+    CONTENT_SOURCE_CHOICES = [
+        (CONTENT_SOURCE_YOUTUBE, 'YouTube Video'),
+        (CONTENT_SOURCE_VIDEO_FILE, 'Uploaded Video File'),
+    ]
     
     SIZE_CHOICES = [
         ('small', 'Small (300x200)'),
@@ -55,6 +61,12 @@ class MediaVideo(models.Model):
     
     title = models.CharField(max_length=300)
     description = models.TextField()
+    content_source = models.CharField(
+        max_length=20,
+        choices=CONTENT_SOURCE_CHOICES,
+        default=CONTENT_SOURCE_YOUTUBE,
+        help_text='Choose how this video should be provided.'
+    )
     youtube_id = models.CharField(
         max_length=255,
         blank=True,
@@ -66,6 +78,12 @@ class MediaVideo(models.Model):
         blank=True,
         null=True,
         help_text="Upload local video file (MP4, WebM, etc.) - Use this OR YouTube ID, not both"
+    )
+    video_thumbnail = models.ImageField(
+        upload_to='media/video-thumbnails/',
+        blank=True,
+        null=True,
+        help_text='Optional cover image for uploaded video files.'
     )
     category = models.ForeignKey(
         'categories.MediaVideoCategory',
@@ -130,10 +148,18 @@ class MediaVideo(models.Model):
                 raise ValidationError({'youtube_id': 'Enter a valid YouTube URL or 11-character video ID.'})
             self.youtube_id = normalized_video_id
 
-        if not self.youtube_id and not self.video_file:
-            raise ValidationError('Either a YouTube URL/ID or a video file must be provided.')
-        if self.youtube_id and self.video_file:
-            raise ValidationError('Provide either a YouTube URL/ID or a video file, not both.')
+        if self.content_source == self.CONTENT_SOURCE_YOUTUBE:
+            if not self.youtube_id:
+                raise ValidationError({'youtube_id': 'A YouTube URL or video ID is required when source is YouTube.'})
+            if self.video_file:
+                raise ValidationError({'video_file': 'Remove the uploaded file when source is YouTube.'})
+            if self.video_thumbnail:
+                raise ValidationError({'video_thumbnail': 'Remove the uploaded cover image when source is YouTube.'})
+        elif self.content_source == self.CONTENT_SOURCE_VIDEO_FILE:
+            if not self.video_file:
+                raise ValidationError({'video_file': 'Upload a video file when source is Uploaded Video File.'})
+            if self.youtube_id:
+                raise ValidationError({'youtube_id': 'Remove the YouTube URL/ID when source is Uploaded Video File.'})
 
         has_custom_width = self.width_percentage is not None
         has_custom_height = self.height_pixels is not None
@@ -346,6 +372,15 @@ class GlobalMission(models.Model):
 
 
 class PressCoverage(models.Model):
+    CONTENT_SOURCE_IMAGE = 'image'
+    CONTENT_SOURCE_YOUTUBE = 'youtube'
+    CONTENT_SOURCE_VIDEO_FILE = 'video_file'
+    CONTENT_SOURCE_CHOICES = [
+        (CONTENT_SOURCE_IMAGE, 'Image'),
+        (CONTENT_SOURCE_YOUTUBE, 'YouTube Video'),
+        (CONTENT_SOURCE_VIDEO_FILE, 'Uploaded Video File'),
+    ]
+
     MEDIA_TYPES = [
         ('Newspaper', 'Newspaper'),
         ('Television', 'Television'),
@@ -357,7 +392,31 @@ class PressCoverage(models.Model):
     outlet = models.CharField(max_length=200, help_text="Publication name")
     description = models.TextField()
     media_type = models.CharField(max_length=20, choices=MEDIA_TYPES)
+    content_source = models.CharField(
+        max_length=20,
+        choices=CONTENT_SOURCE_CHOICES,
+        default=CONTENT_SOURCE_IMAGE,
+        help_text='Choose whether this press coverage uses an image, YouTube video, or uploaded video file.'
+    )
     image = models.ImageField(upload_to='press/', null=True, blank=True)
+    youtube_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Paste a YouTube URL or video ID for this press item.'
+    )
+    video_file = models.FileField(
+        upload_to='press/videos/',
+        blank=True,
+        null=True,
+        help_text='Upload a local video file for this press item.'
+    )
+    video_thumbnail = models.ImageField(
+        upload_to='press/video-thumbnails/',
+        blank=True,
+        null=True,
+        help_text='Optional cover image for uploaded press videos.'
+    )
     external_url = models.URLField(blank=True)
     date = models.DateField()
     featured = models.BooleanField(default=False)
@@ -368,6 +427,62 @@ class PressCoverage(models.Model):
         ordering = ['order', '-date']
         verbose_name = 'Press Coverage'
         verbose_name_plural = 'Press Coverage'
+
+    @property
+    def youtube_video_id(self):
+        return extract_youtube_video_id(self.youtube_id)
+
+    @property
+    def youtube_embed_url(self):
+        return (
+            f'https://www.youtube.com/embed/{self.youtube_video_id}'
+            if self.youtube_video_id else None
+        )
+
+    @property
+    def youtube_thumbnail_url(self):
+        return (
+            f'https://img.youtube.com/vi/{self.youtube_video_id}/hqdefault.jpg'
+            if self.youtube_video_id else None
+        )
+
+    def clean(self):
+        self.youtube_id = self.youtube_id.strip() if self.youtube_id else None
+        if self.youtube_id:
+            normalized_video_id = extract_youtube_video_id(self.youtube_id)
+            if not normalized_video_id:
+                raise ValidationError({'youtube_id': 'Enter a valid YouTube URL or 11-character video ID.'})
+            self.youtube_id = normalized_video_id
+
+        if self.content_source == self.CONTENT_SOURCE_IMAGE:
+            if not self.image:
+                raise ValidationError({'image': 'Upload an image when source is Image.'})
+            if self.youtube_id:
+                raise ValidationError({'youtube_id': 'Remove the YouTube URL/ID when source is Image.'})
+            if self.video_file:
+                raise ValidationError({'video_file': 'Remove the uploaded video file when source is Image.'})
+            if self.video_thumbnail:
+                raise ValidationError({'video_thumbnail': 'Remove the uploaded video cover image when source is Image.'})
+        elif self.content_source == self.CONTENT_SOURCE_YOUTUBE:
+            if not self.youtube_id:
+                raise ValidationError({'youtube_id': 'A YouTube URL or video ID is required when source is YouTube.'})
+            if self.image:
+                raise ValidationError({'image': 'Remove the image when source is YouTube.'})
+            if self.video_file:
+                raise ValidationError({'video_file': 'Remove the uploaded video file when source is YouTube.'})
+            if self.video_thumbnail:
+                raise ValidationError({'video_thumbnail': 'Remove the uploaded video cover image when source is YouTube.'})
+        elif self.content_source == self.CONTENT_SOURCE_VIDEO_FILE:
+            if not self.video_file:
+                raise ValidationError({'video_file': 'Upload a video file when source is Uploaded Video File.'})
+            if self.image:
+                raise ValidationError({'image': 'Remove the image when source is Uploaded Video File.'})
+            if self.youtube_id:
+                raise ValidationError({'youtube_id': 'Remove the YouTube URL/ID when source is Uploaded Video File.'})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.title

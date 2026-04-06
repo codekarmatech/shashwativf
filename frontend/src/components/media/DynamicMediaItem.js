@@ -69,6 +69,8 @@ const DynamicMediaItem = ({ item, type = 'photo' }) => {
   if (type === 'video') {
     const { cardStyle, frameStyle } = sizeStyles;
     const embedUrl = getVideoEmbedUrl(item);
+    const videoFileUrl = resolveMediaUrl(item.video_file_url || item.video_file);
+    const posterUrl = resolveMediaUrl(item.video_thumbnail_url || item.video_thumbnail);
 
     return (
       <motion.div
@@ -77,14 +79,25 @@ const DynamicMediaItem = ({ item, type = 'photo' }) => {
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
       >
-        <iframe
-          src={embedUrl}
-          title={item.title}
-          className="w-full h-full"
-          style={frameStyle}
-          frameBorder="0"
-          allowFullScreen
-        />
+        {item.content_source === 'youtube' && embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title={item.title}
+            className="w-full h-full"
+            style={frameStyle}
+            frameBorder="0"
+            allowFullScreen
+          />
+        ) : (
+          <video
+            src={videoFileUrl}
+            title={item.title}
+            className="w-full h-full"
+            style={frameStyle}
+            poster={posterUrl || undefined}
+            controls
+          />
+        )}
         <div className="absolute bottom-2 left-2 right-2">
           <div className="bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1">
             <p className="text-xs font-medium text-white truncate">

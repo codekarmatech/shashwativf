@@ -1,18 +1,28 @@
 from django.contrib import admin
 from .models import MediaVideo, MediaPhoto, AcademicExcellence, GlobalMission, PressCoverage
 
+
+class ContentSourceAdminMixin:
+    class Media:
+        js = ('admin/js/media_source_admin.js',)
+
+
 @admin.register(MediaVideo)
-class MediaVideoAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'display_size', 'featured', 'date', 'order']
-    list_filter = ['category', 'display_size', 'featured', 'date']
+class MediaVideoAdmin(ContentSourceAdminMixin, admin.ModelAdmin):
+    list_display = ['title', 'content_source', 'category', 'display_size', 'featured', 'date', 'order']
+    list_filter = ['content_source', 'category', 'display_size', 'featured', 'date']
     search_fields = ['title', 'description']
     list_editable = ['display_size', 'featured', 'order']
     date_hierarchy = 'date'
     
     fieldsets = (
-        ('Video Information', {
-            'fields': ('title', 'description', 'youtube_id', 'video_file'),
-            'description': 'Use either a YouTube URL/ID OR upload a video file, not both'
+        ('Content Source', {
+            'fields': ('content_source',),
+            'description': 'Choose whether this video uses a YouTube link or an uploaded file.'
+        }),
+        ('Video Details', {
+            'fields': ('title', 'description', 'youtube_id', 'video_file', 'video_thumbnail'),
+            'description': 'Only complete the fields for the selected source.'
         }),
         ('Display Settings', {
             'fields': ('display_size', 'width_percentage', 'height_pixels'),
@@ -91,16 +101,21 @@ class GlobalMissionAdmin(admin.ModelAdmin):
 
 
 @admin.register(PressCoverage)
-class PressCoverageAdmin(admin.ModelAdmin):
-    list_display = ['title', 'outlet', 'media_type', 'featured', 'date', 'order']
-    list_filter = ['media_type', 'featured', 'date']
+class PressCoverageAdmin(ContentSourceAdminMixin, admin.ModelAdmin):
+    list_display = ['title', 'outlet', 'media_type', 'content_source', 'featured', 'date', 'order']
+    list_filter = ['media_type', 'content_source', 'featured', 'date']
     search_fields = ['title', 'description', 'outlet']
     list_editable = ['featured', 'order']
     date_hierarchy = 'date'
     
     fieldsets = (
+        ('Content Source', {
+            'fields': ('content_source',),
+            'description': 'Choose whether this press item uses an image, YouTube link, or uploaded video file.'
+        }),
         ('Article Information', {
-            'fields': ('title', 'outlet', 'description', 'image')
+            'fields': ('title', 'outlet', 'description', 'image', 'youtube_id', 'video_file', 'video_thumbnail'),
+            'description': 'Only complete the media field that matches the selected content source.'
         }),
         ('Publication Details', {
             'fields': ('media_type', 'external_url', 'date')

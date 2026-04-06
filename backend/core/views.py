@@ -1,22 +1,31 @@
-import os
+from pathlib import Path
+from urllib.parse import quote
+
 from django.conf import settings
 from django.http import HttpResponse
 from .models import SiteConfiguration
+
+
+DEFAULT_OG_IMAGE_PATH = '/Shasheat IVF R-03.png'
+
+
+def _get_frontend_index_path():
+    frontend_root = Path(settings.BASE_DIR).parent / 'frontend'
+    build_index = frontend_root / 'build' / 'index.html'
+    public_index = frontend_root / 'public' / 'index.html'
+    return build_index if build_index.exists() else public_index
+
+
+def _build_default_og_image_url(request):
+    return request.build_absolute_uri(quote(DEFAULT_OG_IMAGE_PATH, safe='/'))
+
 
 def serve_frontend_with_seo(request, *args, **kwargs):
     """
     Serves the React frontend index.html with dynamically injected SEO meta tags.
     This allows WhatsApp/Facebook link previews to be editable via Django Admin.
     """
-    # 1. Path to the React build's index.html
-    # In production, this is usually in the build folder. 
-    # In local dev, we might need to point to the public folder if build doesn't exist.
-    frontend_build_dir = os.path.join(settings.BASE_DIR, '..', 'frontend', 'build')
-    index_path = os.path.join(frontend_build_dir, 'index.html')
-
-    # Fallback for local development if build folder isn't generated
-    if not os.path.exists(index_path):
-        index_path = os.path.join(settings.BASE_DIR, '..', 'frontend', 'public', 'index.html')
+    index_path = _get_frontend_index_path()
 
     try:
         with open(index_path, 'r', encoding='utf-8') as f:
@@ -27,34 +36,27 @@ def serve_frontend_with_seo(request, *args, **kwargs):
             status=500
         )
 
-    # 2. Fetch the Site Configuration
-    config = SiteConfiguration.objects.first()
-    
-    if config:
-        # 3. Dynamic Values
-        title = config.meta_title or config.site_name
-        description = config.meta_description
-        
-        # Build absolute URL for the image
-        if config.og_image:
-            image_url = request.build_absolute_uri(config.og_image.url)
-        else:
-            # Fallback to a default if no image is uploaded
-            image_url = request.build_absolute_uri(settings.STATIC_URL + 'default_og.png')
+    config = SiteConfiguration.objects.first() or SiteConfiguration()
 
-        # 4. Perform Injections (Using placeholders we'll add to index.html)
-        content = content.replace('__OG_TITLE__', title)
-        content = content.replace('__OG_DESCRIPTION__', description)
-        content = content.replace('__OG_IMAGE__', image_url)
-        
-        # Also replace standard <title> and meta description
-        content = content.replace('<title>Shashwat IVF & Women\'s Hospital | Premier Fertility Care</title>', f'<title>{title}</title>')
-        
-        # Replace the description meta tag
-        # Note: This is a bit fragile if the tag changes, but efficient.
-        # A more robust regex could be used if preferred.
-        default_desc = "Discover premier fertility care at Shashwat IVF"
-        if default_desc in content:
-            content = content.replace(default_desc, description)
+    title = config.meta_title or config.site_name
+    description = config.meta_description
+    image_url = (
+        request.build_absolute_uri(config.og_image.url)
+        if getattr(config, 'og_image', None)
+        else _build_default_og_image_url(request)
+    )
+    canonical_url = request.build_absolute_uri(request.path or '/')
+
+    replacements = {
+        '__SEO_TITLE__': title,
+        '__SEO_DESCRIPTION__': description,
+        '__OG_TITLE__': title,
+        '__OG_DESCRIPTION__': description,
+        '__OG_IMAGE__': image_url,
+        '__OG_URL__': canonical_url,
+    }
+
+    for placeholder, value in replacements.items():
+        content = content.replace(placeholder, value)
 
     return HttpResponse(content)

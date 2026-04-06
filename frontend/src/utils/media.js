@@ -65,6 +65,10 @@ export const getVideoEmbedUrl = (video) => {
 };
 
 export const getVideoThumbnailUrl = (video) => {
+  if (video?.content_source === 'video_file') {
+    return resolveMediaUrl(video?.video_thumbnail_url || video?.video_thumbnail);
+  }
+
   if (video?.youtube_thumbnail_url) {
     return video.youtube_thumbnail_url;
   }

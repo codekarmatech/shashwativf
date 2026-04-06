@@ -45,7 +45,7 @@ const VideoCard = ({ video, isPlaying, onPlay }) => {
       <GradientCard gradient="soft" className="overflow-hidden hover:shadow-card-hover transition-all duration-300">
         <div className="relative bg-gray-900" style={frameStyle}>
           {isPlaying ? (
-            embedUrl ? (
+            video.content_source === 'youtube' && embedUrl ? (
               <iframe
                 src={`${embedUrl}?autoplay=1&rel=0`}
                 className="w-full h-full"
@@ -59,6 +59,7 @@ const VideoCard = ({ video, isPlaying, onPlay }) => {
                 className="w-full h-full"
                 controls
                 autoPlay
+                poster={thumbnailUrl || undefined}
                 title={video.title}
               />
             ) : null
@@ -133,6 +134,68 @@ const PhotoCard = ({ photo }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+const PressCoverageCard = ({ article }) => {
+  const imageUrl = resolveMediaUrl(article.image_url || article.image);
+  const videoFileUrl = resolveMediaUrl(article.video_file_url || article.video_file);
+  const embedUrl = article.youtube_embed_url || getVideoEmbedUrl(article);
+  const thumbnailUrl = getVideoThumbnailUrl(article);
+
+  let mediaContent = null;
+  if (article.content_source === 'youtube' && embedUrl) {
+    mediaContent = (
+      <div className="w-full aspect-video bg-gray-900 overflow-hidden">
+        <iframe
+          src={embedUrl}
+          title={article.title}
+          className="w-full h-full"
+          allow="encrypted-media; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    );
+  } else if (article.content_source === 'video_file' && videoFileUrl) {
+    mediaContent = (
+      <div className="w-full aspect-video bg-gray-900 overflow-hidden">
+        <video src={videoFileUrl} controls poster={thumbnailUrl || undefined} className="w-full h-full" />
+      </div>
+    );
+  } else if (imageUrl || thumbnailUrl) {
+    mediaContent = (
+      <div className="w-full h-48 bg-gray-200 overflow-hidden">
+        <img
+          src={imageUrl || thumbnailUrl}
+          alt={article.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <GradientCard gradient="soft" className="overflow-hidden hover:shadow-card-hover transition-all duration-300">
+      {mediaContent}
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-3 gap-3">
+          <Pill variant="coral" size="sm">{article.outlet}</Pill>
+          <span className="text-xs text-brand-muted whitespace-nowrap">{article.date}</span>
+        </div>
+        <h3 className="font-bold text-brand-ink mb-2">{article.title}</h3>
+        <p className="text-brand-muted text-sm mb-3">{article.description}</p>
+        {article.external_url && (
+          <a
+            href={article.external_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-teal hover:text-brand-ink text-sm font-medium"
+          >
+            Read Full Article →
+          </a>
+        )}
+      </div>
+    </GradientCard>
   );
 };
 
@@ -314,45 +377,11 @@ const MediaPage = () => {
                     <h2 className="font-heading font-bold text-2xl text-brand-ink mb-6">Press Coverage</h2>
                     {displayData.press.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {displayData.press.slice(0, 4).map((article) => {
-                          const imageUrl = resolveMediaUrl(article.image_url || article.image);
-
-                          return (
-                            <motion.div key={article.id} variants={itemVariants}>
-                              <GradientCard gradient="soft" className="p-6 hover:shadow-card-hover transition-all duration-300">
-                                <div className="flex items-start space-x-4">
-                                  {imageUrl && (
-                                    <div className="w-20 h-20 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-                                      <img
-                                        src={imageUrl}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                  )}
-                                  <div className="flex-1">
-                                    <h3 className="font-bold text-brand-ink mb-2">{article.title}</h3>
-                                    <p className="text-brand-muted text-sm mb-3 line-clamp-2">{article.description}</p>
-                                    <div className="flex items-center justify-between gap-3">
-                                      <Pill variant="coral" size="sm">{article.outlet}</Pill>
-                                      <span className="text-xs text-brand-muted whitespace-nowrap">{article.date}</span>
-                                    </div>
-                                    {article.external_url && (
-                                      <a
-                                        href={article.external_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-block mt-3 text-sm font-medium text-brand-teal hover:text-brand-ink"
-                                      >
-                                        Read Full Article →
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              </GradientCard>
-                            </motion.div>
-                          );
-                        })}
+                        {displayData.press.slice(0, 4).map((article) => (
+                          <motion.div key={article.id} variants={itemVariants}>
+                            <PressCoverageCard article={article} />
+                          </motion.div>
+                        ))}
                       </div>
                     ) : (
                       <ComingSoon section="press coverage" />
@@ -576,45 +605,11 @@ const MediaPage = () => {
                     animate="visible"
                     className="grid grid-cols-1 md:grid-cols-2 gap-6"
                   >
-                    {displayData.press.map((article) => {
-                      const imageUrl = resolveMediaUrl(article.image_url || article.image);
-
-                      return (
-                        <motion.div key={article.id} variants={itemVariants}>
-                          <GradientCard gradient="soft" className="p-6 hover:shadow-card-hover transition-all duration-300">
-                            <div className="flex items-start space-x-4">
-                              {imageUrl && (
-                                <div className="w-24 h-24 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-                                  <img
-                                    src={imageUrl}
-                                    alt={article.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              )}
-                              <div className="flex-1">
-                                <h3 className="font-bold text-brand-ink mb-2">{article.title}</h3>
-                                <p className="text-brand-muted text-sm mb-3">{article.description}</p>
-                                <div className="flex items-center justify-between mb-3 gap-3">
-                                  <Pill variant="coral" size="sm">{article.outlet}</Pill>
-                                  <span className="text-xs text-brand-muted whitespace-nowrap">{article.date}</span>
-                                </div>
-                                {article.external_url && (
-                                  <a
-                                    href={article.external_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-brand-teal hover:text-brand-ink text-sm font-medium"
-                                  >
-                                    Read Full Article →
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          </GradientCard>
-                        </motion.div>
-                      );
-                    })}
+                    {displayData.press.map((article) => (
+                      <motion.div key={article.id} variants={itemVariants}>
+                        <PressCoverageCard article={article} />
+                      </motion.div>
+                    ))}
                   </motion.div>
                 ) : (
                   <ComingSoon section="press coverage" />

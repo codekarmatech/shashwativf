@@ -28,14 +28,16 @@ class MediaVideoSerializer(AbsoluteURLMixin, serializers.ModelSerializer):
     youtube_embed_url = serializers.SerializerMethodField()
     youtube_thumbnail_url = serializers.SerializerMethodField()
     video_file_url = serializers.SerializerMethodField()
+    video_thumbnail_url = serializers.SerializerMethodField()
     has_custom_dimensions = serializers.SerializerMethodField()
 
     class Meta:
         model = MediaVideo
         fields = [
-            'id', 'title', 'description', 'youtube_id', 'youtube_video_id',
+            'id', 'title', 'description', 'content_source', 'youtube_id', 'youtube_video_id',
             'youtube_embed_url', 'youtube_thumbnail_url', 'video_file',
-            'video_file_url', 'display_size', 'width_percentage', 'height_pixels',
+            'video_file_url', 'video_thumbnail', 'video_thumbnail_url',
+            'display_size', 'width_percentage', 'height_pixels',
             'has_custom_dimensions', 'date', 'featured', 'order', 'created_at',
             'category', 'category_name', 'category_label',
         ]
@@ -51,6 +53,9 @@ class MediaVideoSerializer(AbsoluteURLMixin, serializers.ModelSerializer):
 
     def get_video_file_url(self, obj):
         return self.build_absolute_url(obj.video_file)
+
+    def get_video_thumbnail_url(self, obj):
+        return self.build_absolute_url(obj.video_thumbnail)
 
     def get_has_custom_dimensions(self, obj):
         return obj.width_percentage is not None and obj.height_pixels is not None
@@ -119,14 +124,36 @@ class GlobalMissionSerializer(AbsoluteURLMixin, serializers.ModelSerializer):
 
 class PressCoverageSerializer(AbsoluteURLMixin, serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
+    youtube_video_id = serializers.SerializerMethodField()
+    youtube_embed_url = serializers.SerializerMethodField()
+    youtube_thumbnail_url = serializers.SerializerMethodField()
+    video_file_url = serializers.SerializerMethodField()
+    video_thumbnail_url = serializers.SerializerMethodField()
 
     class Meta:
         model = PressCoverage
         fields = [
-            'id', 'title', 'outlet', 'description', 'media_type', 'image',
-            'image_url', 'external_url', 'date', 'featured', 'order',
-            'created_at',
+            'id', 'title', 'outlet', 'description', 'media_type', 'content_source',
+            'image', 'image_url', 'youtube_id', 'youtube_video_id',
+            'youtube_embed_url', 'youtube_thumbnail_url', 'video_file',
+            'video_file_url', 'video_thumbnail', 'video_thumbnail_url',
+            'external_url', 'date', 'featured', 'order', 'created_at'
         ]
 
     def get_image_url(self, obj):
         return self.build_absolute_url(obj.image)
+
+    def get_youtube_video_id(self, obj):
+        return obj.youtube_video_id
+
+    def get_youtube_embed_url(self, obj):
+        return obj.youtube_embed_url
+
+    def get_youtube_thumbnail_url(self, obj):
+        return obj.youtube_thumbnail_url
+
+    def get_video_file_url(self, obj):
+        return self.build_absolute_url(obj.video_file)
+
+    def get_video_thumbnail_url(self, obj):
+        return self.build_absolute_url(obj.video_thumbnail)
