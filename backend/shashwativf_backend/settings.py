@@ -136,16 +136,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(BASE_DIR, 'staticfiles'))
+STATIC_ROOT = '/var/www/django-static/'
 
 # Include frontend build static files for collectstatic
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR.parent, 'frontend', 'build'),
+    os.path.join(BASE_DIR.parent, 'frontend', 'build', 'static'),
 ]
 
 # Media files (User uploaded content)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = '/var/www/django-media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
