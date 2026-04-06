@@ -23,6 +23,7 @@ from django.views.generic import RedirectView
 from core.views import serve_frontend_with_seo
 
 urlpatterns = [
+    # 1. Admin and API - Highest Priority
     path('admin/', admin.site.urls),
     path('api/doctors/', include('doctors.urls')),
     path('api/services/', include('services.urls')),
@@ -30,20 +31,19 @@ urlpatterns = [
     path('api/media/', include('media.urls')),
     path('api/contact/', include('contact.urls')),
     
-    # Redirects for old media routes to help SEO and prevent 404s
+    # 2. Redirects for old media routes
     path('media/', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
     path('media', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
     path('mediacoverage/', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
     path('mediacoverage', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
     
-    # API and Admin are handled above.
-    # The catch-all for React frontend with dynamic SEO
-    # We move the catch-all to only trigger if it doesn't start with admin or api
+    # 3. Root path
     path('', serve_frontend_with_seo, name='frontend_root'),
     
-    # Using media($|/) ensures that routes like 'coverageofmedia' correctly fall through
-    # while actual 'media/' file paths (user uploads) are still excluded from the frontend.
-    re_path(r'^(?!admin|api|static|media($|/)).*$', serve_frontend_with_seo, name='frontend_catch_all'),
+    # 4. Catch-all for React Frontend
+    # This must be at the very end. We exclude common binary/static prefixes
+    # to avoid MIME errors if assets are missing on the server.
+    re_path(r'^(?!admin|api|static|media|favicon|robots).*$', serve_frontend_with_seo, name='frontend_catch_all'),
 ]
 
 # Serve media files during development

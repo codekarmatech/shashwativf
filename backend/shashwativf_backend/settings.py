@@ -140,7 +140,7 @@ STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(BASE_DIR, 'staticfiles'
 
 # Include frontend build static files for collectstatic
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR.parent, 'frontend', 'build', 'static'),
+    os.path.join(BASE_DIR.parent, 'frontend', 'build'),
 ]
 
 # Media files (User uploaded content)
