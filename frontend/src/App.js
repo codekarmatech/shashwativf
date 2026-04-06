@@ -31,8 +31,9 @@ function App() {
             <Route path="stories" element={<SuccessStoriesPage />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<BlogDetailPage />} />
-            <Route path="mediacoverage" element={<MediaPage />} />
-            <Route path="media" element={<Navigate to="/mediacoverage" replace />} />
+            <Route path="coverageofmedia" element={<MediaPage />} />
+            <Route path="mediacoverage" element={<Navigate to="/coverageofmedia" replace />} />
+            <Route path="media" element={<Navigate to="/coverageofmedia" replace />} />
             <Route path="contact" element={<ContactPage />} />
             {/* Additional routes will be added here */}
             <Route path="*" element={<div className="min-h-screen flex items-center justify-center"><div className="text-center"><h1 className="text-2xl font-bold text-brand-ink mb-4">Page Coming Soon</h1><p className="text-brand-muted">This page is under construction.</p></div></div>} />

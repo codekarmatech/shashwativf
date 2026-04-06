@@ -8,7 +8,7 @@ const Footer = () => {
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
-    { name: 'Media & Academics', href: '/mediacoverage' },
+    { name: 'Media & Academics', href: '/coverageofmedia' },
     { name: 'Success Stories', href: '/stories' },
     { name: 'Blog', href: '/blog' },
     { name: 'Contact', href: '/contact' }

@@ -29,13 +29,21 @@ urlpatterns = [
     path('api/blog/', include('blog.urls')),
     path('api/media/', include('media.urls')),
     path('api/contact/', include('contact.urls')),
-    path('media', RedirectView.as_view(url='/mediacoverage', permanent=True)),
+    
+    # Redirects for old media routes to help SEO and prevent 404s
+    path('media/', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
+    path('media', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
+    path('mediacoverage/', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
+    path('mediacoverage', RedirectView.as_view(url='/coverageofmedia', permanent=True)),
     
     # API and Admin are handled above.
     # The catch-all for React frontend with dynamic SEO
     # We move the catch-all to only trigger if it doesn't start with admin or api
     path('', serve_frontend_with_seo, name='frontend_root'),
-    re_path(r'^(?!admin|api|static|media).*$', serve_frontend_with_seo, name='frontend_catch_all'),
+    
+    # Using media($|/) ensures that routes like 'coverageofmedia' correctly fall through
+    # while actual 'media/' file paths (user uploads) are still excluded from the frontend.
+    re_path(r'^(?!admin|api|static|media($|/)).*$', serve_frontend_with_seo, name='frontend_catch_all'),
 ]
 
 # Serve media files during development
