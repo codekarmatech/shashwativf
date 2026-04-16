@@ -8,14 +8,11 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useTeamMembers } from '../hooks/useApi';
-import { teamMembers } from '../data/doctors';
 
 const TeamPage = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const { data: apiTeamMembers, loading, error } = useTeamMembers();
-  
-  // Fallback to mock data if API fails
-  const displayTeamMembers = apiTeamMembers?.length > 0 ? apiTeamMembers : teamMembers;
+  const displayTeamMembers = apiTeamMembers || [];
 
   const categories = [
     { name: 'All', icon: <FaUsers className="w-4 h-4" />, count: displayTeamMembers.length },
@@ -96,6 +93,22 @@ const TeamPage = () => {
           message="We couldn't load the team profiles at this time." 
           onRetry={() => window.location.reload()} 
         />
+      </>
+    );
+  }
+
+  if (!displayTeamMembers.length) {
+    return (
+      <>
+        <Helmet>
+          <title>Our Team - Dedicated Healthcare Professionals | Shashwat IVF & Women's Hospital</title>
+        </Helmet>
+        <Section padding="xl">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-brand-ink mb-4">Team Not Available</h1>
+            <p className="text-brand-muted">Team profiles have not been published yet.</p>
+          </div>
+        </Section>
       </>
     );
   }

@@ -1,9 +1,7 @@
-import { clinicInfo as fallbackClinicInfo } from '../data/clinic';
-
 const compact = (values) => values.filter(Boolean);
 const joinWithComma = (values) => compact(values).join(', ');
 
-export const normalizeClinicInfo = (apiClinicInfo, fallback = fallbackClinicInfo) => {
+export const normalizeClinicInfo = (apiClinicInfo, fallback = {}) => {
   const source = apiClinicInfo || {};
   const fallbackContact = fallback.contact || {};
   const fallbackAddress = fallbackContact.address || {};

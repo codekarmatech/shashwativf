@@ -8,14 +8,11 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useLeaders } from '../hooks/useApi';
-import { doctors } from '../data/doctors';
 import { FaHeart } from 'react-icons/fa';
 
 const LeadersPage = () => {
   const { data: leaders, loading, error } = useLeaders();
-  
-  // Fallback to mock data if API fails
-  const displayLeaders = leaders?.length > 0 ? leaders : doctors.filter(doctor => doctor.isLeader);
+  const displayLeaders = leaders || [];
 
   const getHighlightIcon = (highlight) => {
     if (highlight.includes('Gold') || highlight.includes('Medal')) return <FaMedal className="w-4 h-4" />;
@@ -75,6 +72,22 @@ const LeadersPage = () => {
           message="We couldn't load the leadership team profiles." 
           onRetry={() => window.location.reload()} 
         />
+      </>
+    );
+  }
+
+  if (!displayLeaders.length) {
+    return (
+      <>
+        <Helmet>
+          <title>Our Leaders - Expert Fertility Specialists | Shashwat IVF & Women's Hospital</title>
+        </Helmet>
+        <Section padding="xl">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-brand-ink mb-4">Leaders Not Available</h1>
+            <p className="text-brand-muted">Leadership profiles have not been published yet.</p>
+          </div>
+        </Section>
       </>
     );
   }

@@ -16,13 +16,11 @@ import {
   FaMars
 } from 'react-icons/fa';
 import { useServices } from '../../hooks/useApi';
-import { services } from '../../data/services';
+import { normalizeServices } from '../../utils/content';
 
 const ServicesBento = () => {
   const { data: apiServices, loading } = useServices();
-  
-  // Fallback to mock data if API fails
-  const displayServices = apiServices?.length > 0 ? apiServices : services;
+  const displayServices = normalizeServices(apiServices || []);
   
   const iconMap = {
     FaFlask: FaFlask,
@@ -74,6 +72,10 @@ const ServicesBento = () => {
         </div>
       </section>
     );
+  }
+
+  if (!displayServices.length) {
+    return null;
   }
 
   return (
@@ -179,7 +181,7 @@ const ServicesBento = () => {
                           <p className={`text-lg mb-6 leading-relaxed ${
                             isEggFreezing ? 'text-white/90' : 'text-gray-600'
                           }`}>
-                            {service.short_description || service.shortDescription}
+                            {service.shortDescription}
                           </p>
                           
                           {/* Key Features */}

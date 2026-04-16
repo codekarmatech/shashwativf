@@ -6,13 +6,10 @@ import GradientCard from '../common/GradientCard';
 import Pill from '../common/Pill';
 import SectionHeader from '../common/SectionHeader';
 import { useLeaders } from '../../hooks/useApi';
-import { doctors } from '../../data/doctors';
 
 const LeadersSection = () => {
   const { data: leaders, loading } = useLeaders();
-  
-  // Fallback to mock data if API fails
-  const displayLeaders = leaders?.length > 0 ? leaders : doctors.filter(doctor => doctor.isLeader);
+  const displayLeaders = leaders || [];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,6 +60,10 @@ const LeadersSection = () => {
         </div>
       </section>
     );
+  }
+
+  if (!displayLeaders.length) {
+    return null;
   }
 
   return (
