@@ -25,6 +25,7 @@ export const enrichDoctorProfile = (doctor = {}) => {
     return {
       ...doctor,
       name: formattedName,
+      profileLabel: 'Senior IVF Specialist',
       qualifications: 'M.D., D.G.O. (Gold in D.G.O. + M.D.), FICOG, ART Specialist (USA)',
       experience: '30+ years',
       highlights: [

@@ -169,6 +169,11 @@ const LeadersPage = () => {
                       
                       {/* Basic Info */}
                       <div className="space-y-3">
+                        {leader.profileLabel && (
+                          <div className="inline-flex items-center rounded-full border border-brand-teal/15 bg-white/90 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-teal shadow-sm shadow-brand-teal/5">
+                            {leader.profileLabel}
+                          </div>
+                        )}
                         <h2 className="font-heading font-bold text-3xl text-brand-ink">
                           {displayName}
                         </h2>
