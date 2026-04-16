@@ -128,30 +128,32 @@ const WhyShashwat = () => {
             Our Journey of Excellence
           </h3>
           
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-brand-tealSoft transform -translate-y-1/2" />
-            
-            {/* Timeline Items */}
-            <div className="flex justify-between items-center relative">
-              {timeline.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex flex-col items-center text-center max-w-32"
-                >
-                  <div className="w-4 h-4 bg-brand-teal rounded-full mb-3 relative z-10" />
-                  <div className="text-sm font-bold text-brand-teal mb-1">
-                    {item.year}
-                  </div>
-                  <div className="text-xs text-brand-muted leading-tight">
-                    {item.event}
-                  </div>
-                </motion.div>
-              ))}
+          <div className="overflow-x-auto pb-4">
+            <div className="relative min-w-[840px]">
+              {/* Timeline Line */}
+              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-brand-tealSoft transform -translate-y-1/2" />
+              
+              {/* Timeline Items */}
+              <div className="flex justify-between items-center gap-6 relative">
+                {timeline.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="flex flex-col items-center text-center max-w-32"
+                  >
+                    <div className="w-4 h-4 bg-brand-teal rounded-full mb-3 relative z-10" />
+                    <div className="text-sm font-bold text-brand-teal mb-1">
+                      {item.year}
+                    </div>
+                    <div className="text-xs text-brand-muted leading-tight">
+                      {item.event}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>

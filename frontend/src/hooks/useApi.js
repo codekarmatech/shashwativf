@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import apiService from '../api/apiService';
+import { enrichDoctorProfile } from '../utils/doctors';
 
 // Generic API hook for data fetching with loading and error states
 export const useApiData = (apiMethod, dependencies = []) => {
@@ -32,7 +33,13 @@ export const useApiData = (apiMethod, dependencies = []) => {
 
 // Specific hooks for different data types
 export const useDoctors = () => {
-  return useApiData('getDoctors');
+  const { data, loading, error } = useApiData('getDoctors');
+
+  return {
+    data: data?.map(enrichDoctorProfile) || [],
+    loading,
+    error,
+  };
 };
 
 export const useLeaders = () => {

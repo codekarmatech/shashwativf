@@ -282,7 +282,7 @@ const BlogDetailPage = () => {
                   </div>
                   <p className="text-white/90 text-sm">
                     {post.author === 'Dr. Shital Punjabi' 
-                      ? 'Lead Fertility Specialist with over 20 years of experience in reproductive medicine. Gold medalist and FICOG certified.'
+                      ? 'Lead Fertility Specialist with 30+ years of experience in reproductive medicine. Gold in D.G.O. + M.D. and FICOG certified.'
                       : 'Medical professional at Shashwat IVF & Women\'s Hospital, dedicated to providing expert guidance on fertility and women\'s health.'
                     }
                   </p>

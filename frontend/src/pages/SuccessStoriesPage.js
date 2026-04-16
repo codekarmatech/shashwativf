@@ -117,7 +117,7 @@ const SuccessStoriesPage = () => {
             <div className="text-brand-muted text-sm">Success Rate</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-brand-lavender mb-2">20+</div>
+            <div className="text-3xl font-bold text-brand-lavender mb-2">29+</div>
             <div className="text-brand-muted text-sm">Years Experience</div>
           </div>
           <div className="text-center">

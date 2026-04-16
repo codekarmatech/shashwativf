@@ -28,13 +28,13 @@ def setup_backend():
     # Create sample doctor if none exist
     if not Doctor.objects.exists():
         Doctor.objects.create(
-            name="Shital Punjabi",
+            name="Dr. Shital Punjabi",
             designation="Consultant Gynecologist & IVF Specialist",
-            qualifications="M.D., D.G.O., Diploma in Gynec Endoscopy (CICE, France)",
-            experience="20+ years in Gynecology, 10+ years in ART Experience",
+            qualifications="M.D., D.G.O. (Gold in D.G.O. + M.D.), FICOG, ART Specialist (USA)",
+            experience="30+ years",
             specialties=["IVF & ART", "Gynecologic Endoscopy", "Cosmetic Gynecology"],
-            highlights=["Gold Medal in D.G.O", "FICOG Certified", "International Faculty"],
-            bio="Dr. Shital Punjabi is a renowned fertility specialist with over 20 years of experience in gynecology and reproductive medicine.",
+            highlights=["Gold in D.G.O. + M.D.", "FICOG Certified", "International Faculty"],
+            bio="Dr. Shital Punjabi is a renowned fertility specialist with 30+ years of experience in gynecology and reproductive medicine.",
             quote="Precision in surgery and compassion in care - these are the foundations of successful fertility treatments.",
             is_leader=True,
             category="Doctor"

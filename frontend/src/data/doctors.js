@@ -3,17 +3,17 @@ export const doctors = [
     id: 1,
     name: "Dr. Shital Punjabi",
     designation: "Consultant Vaginal Cosmetic Surgeon",
-    qualifications: "M.D, D.G.O (Gold Medalist), FICOG, ART Specialist (USA)",
+    qualifications: "M.D., D.G.O. (Gold in D.G.O. + M.D.), FICOG, ART Specialist (USA)",
     specialties: ["IVF & ART", "Vaginal Cosmetic Surgery", "Fertility Enhancement"],
-    experience: "20+ years",
+    experience: "30+ years",
     highlights: [
-      "Gold Medalist in D.G.O",
+      "Gold in D.G.O. + M.D.",
       "FICOG Certified",
       "ART Specialist Training (USA)",
       "International Faculty",
       "National & International Conference Speaker"
     ],
-    bio: "Dr. Shital Punjabi is the face of Shashwat IVF & Women's Hospital, bringing over two decades of expertise in fertility treatments and vaginal cosmetic surgery. Her gold medal achievements and international training make her a leading authority in reproductive medicine.",
+    bio: "Dr. Shital Punjabi is the face of Shashwat IVF & Women's Hospital, bringing 30+ years of expertise in fertility treatments and vaginal cosmetic surgery. Her academic excellence and international training make her a leading authority in reproductive medicine.",
     quote: "Every couple deserves the joy of parenthood. Our role is to guide them with ethical, transparent care throughout their fertility journey.",
     image: "/images/doctors/dr-shital.jpg",
     isLeader: true
@@ -24,14 +24,14 @@ export const doctors = [
     designation: "Consultant Vaginal Cosmetic Surgeon",
     qualifications: "M.D., D.G.O., Diploma in Gynec Endoscopy (CICE, France)",
     specialties: ["Laparoscopic Surgery", "Gynecologic Endoscopy", "Cosmetic Gynecology", "ART"],
-    experience: "20+ years in Gynecology, 10+ years in ART",
+    experience: "30+ years",
     highlights: [
       "Diploma in Gynec Endoscopy (CICE, France)",
       "Expert in TLH & Myomectomy",
       "Fertility-enhancing Laparoscopic Surgeries",
       "Vaginal Rejuvenation Specialist"
     ],
-    bio: "Dr. Rajesh Punjabi combines advanced surgical expertise with fertility treatments, specializing in minimally invasive procedures that enhance reproductive outcomes. His training in France adds international perspective to his practice.",
+    bio: "Dr. Rajesh Punjabi combines advanced surgical expertise with fertility treatments, specializing in minimally invasive procedures that enhance reproductive outcomes.",
     quote: "Precision in surgery and compassion in care - these are the foundations of successful fertility treatments.",
     image: "/images/doctors/dr-rajesh.jpg",
     isLeader: true

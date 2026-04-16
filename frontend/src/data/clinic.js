@@ -32,9 +32,9 @@ export const clinicInfo = {
   metrics: {
     townsReached: "91+",
     livesImpacted: "20,000+",
-    yearsExperience: "20+",
+    yearsExperience: "29+",
     successRate: "65%",
-    establishedYear: "2004"
+    establishedYear: "1997"
   },
 
   accreditations: [
@@ -93,33 +93,48 @@ export const impactData = {
 
 export const timeline = [
   {
-    year: "2004",
+    year: "1997",
     event: "Practice Started",
-    description: "Dr. Shital and Dr. Rajesh began their medical practice"
+    description: "The medical practice began, laying the foundation for Shashwat's journey."
   },
   {
-    year: "2011", 
-    event: "Shashwat IVF Centre Established",
-    description: "Dedicated IVF centre launched with state-of-the-art facilities"
+    year: "2002",
+    event: "Practice in Ahmedabad",
+    description: "The practice expanded into Ahmedabad."
   },
   {
-    year: "2018",
-    event: "NABH Accreditation",
-    description: "Achieved NABH accreditation for quality healthcare standards"
+    year: "2004",
+    event: "IVF Practice Started",
+    description: "Specialized IVF practice was introduced."
   },
   {
-    year: "2020",
-    event: "FOGSI Training Centre",
-    description: "Recognized as FOGSI Certified Training Centre for Gynecologists"
+    year: "2009",
+    event: "Prahladnagar Embryology Lab",
+    description: "An embryology lab was started in Prahladnagar."
+  },
+  {
+    year: "2009",
+    event: "International Fertility Camps",
+    description: "Fertility camps were launched in Tanzania and Madagascar."
+  },
+  {
+    year: "2012",
+    event: "Science City Embryology Lab",
+    description: "A new embryology lab was started in Science City."
+  },
+  {
+    year: "2015",
+    event: "Cosmetic Gynecology",
+    description: "Cosmetic gynecology services were introduced."
   },
   {
     year: "2022",
-    event: "International Expansion",
-    description: "Began international medical missions in Tanzania and Madagascar"
+    event: "Multi-Location Expansion",
+    description: "The practice expanded into multiple locations."
   },
   {
-    year: "2024",
-    event: "Digital Transformation",
-    description: "Launched comprehensive digital platform for patient care"
+    year: "2026",
+    event: "Boutique Hospital at Shilaj",
+    description: "A boutique hospital was launched at Shilaj."
   }
 ];

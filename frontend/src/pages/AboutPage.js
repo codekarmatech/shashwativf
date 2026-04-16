@@ -60,9 +60,9 @@ const AboutPage = () => {
     <>
       <Helmet>
         <title>About Us - Shashwat IVF & Women's Hospital | NABH Accredited Fertility Center</title>
-        <meta 
-          name="description" 
-          content="Learn about Shashwat IVF & Women's Hospital - NABH accredited fertility center and FOGSI certified training centre with 20+ years of excellence in reproductive medicine." 
+        <meta
+          name="description"
+          content="Learn about Shashwat IVF & Women's Hospital - NABH accredited fertility center and FOGSI certified training centre with decades of excellence in reproductive medicine."
         />
         <meta name="keywords" content="about shashwat ivf, fertility hospital ahmedabad, NABH accredited, FOGSI training centre, Dr Shital Punjabi" />
       </Helmet>
@@ -80,7 +80,7 @@ const AboutPage = () => {
               Nurturing Dreams, Creating Families
             </h1>
             <p className="text-xl md:text-2xl text-brand-muted leading-relaxed">
-              For over two decades, we've been at the forefront of fertility treatment and women's healthcare, 
+              Since 1997, we've been at the forefront of fertility treatment and women's healthcare,
               combining advanced medical expertise with compassionate care.
             </p>
           </motion.div>
@@ -101,21 +101,21 @@ const AboutPage = () => {
             </h2>
             <div className="space-y-4 text-lg text-brand-muted leading-relaxed">
               <p>
-                Shashwat IVF & Women's Hospital stands as a beacon of hope for couples seeking 
-                fertility treatment in Gujarat and beyond. Our NABH-accredited facility combines 
+                Shashwat IVF & Women's Hospital stands as a beacon of hope for couples seeking
+                fertility treatment in Gujarat and beyond. Our NABH-accredited facility combines
                 state-of-the-art technology with personalized care to deliver exceptional outcomes.
               </p>
               <p>
-                As a FOGSI Certified Training Centre for Gynecologists, we not only provide 
-                world-class treatment but also contribute to advancing medical education and 
+                As a FOGSI Certified Training Centre for Gynecologists, we not only provide
+                world-class treatment but also contribute to advancing medical education and
                 research in reproductive medicine.
               </p>
               <p>
-                Our comprehensive approach encompasses not just fertility treatments, but complete 
+                Our comprehensive approach encompasses not just fertility treatments, but complete
                 women's health services, ensuring holistic care under one roof.
               </p>
             </div>
-            
+
             <div className="mt-8">
               <PrimaryButton to="/about/leaders" size="lg">
                 Meet Our Leaders
@@ -141,7 +141,7 @@ const AboutPage = () => {
                 </div>
               </div>
               <p className="text-brand-muted text-sm">
-                National Accreditation Board for Hospitals & Healthcare Providers certification 
+                National Accreditation Board for Hospitals & Healthcare Providers certification
                 ensures we meet the highest quality and safety standards.
               </p>
             </GradientCard>
@@ -157,7 +157,7 @@ const AboutPage = () => {
                 </div>
               </div>
               <p className="text-white/90 text-sm">
-                Federation of Obstetric and Gynaecological Societies of India has certified 
+                Federation of Obstetric and Gynaecological Societies of India has certified
                 us as an official training centre for medical professionals.
               </p>
             </GradientCard>
@@ -219,13 +219,13 @@ const AboutPage = () => {
             <MetricCard
               value={clinicInfo.metrics.yearsExperience}
               label="Years of Excellence"
-              description="Serving families since 2004"
+              description="Serving families since 1997"
               icon={<FaAward className="w-6 h-6" />}
               color="teal"
               animated={false}
             />
           </motion.div>
-          
+
           <motion.div variants={itemVariants}>
             <MetricCard
               value={clinicInfo.metrics.townsReached}
@@ -236,7 +236,7 @@ const AboutPage = () => {
               animated={false}
             />
           </motion.div>
-          
+
           <motion.div variants={itemVariants}>
             <MetricCard
               value={clinicInfo.metrics.livesImpacted}
@@ -247,7 +247,7 @@ const AboutPage = () => {
               animated={false}
             />
           </motion.div>
-          
+
           <motion.div variants={itemVariants}>
             <MetricCard
               value={clinicInfo.metrics.successRate}
@@ -299,11 +299,11 @@ const AboutPage = () => {
                     </p>
                   </GradientCard>
                 </div>
-                
+
                 <div className="flex-shrink-0">
                   <div className="w-4 h-4 bg-brand-teal rounded-full border-4 border-white shadow-lg" />
                 </div>
-                
+
                 <div className="flex-1" />
               </motion.div>
             ))}

@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useLeaders } from '../hooks/useApi';
 import { FaHeart } from 'react-icons/fa';
+import { formatDoctorName } from '../utils/doctors';
 
 const LeadersPage = () => {
   const { data: leaders, loading, error } = useLeaders();
@@ -134,6 +135,12 @@ const LeadersPage = () => {
         >
           {displayLeaders.map((leader, index) => (
             <motion.div key={leader.id} variants={itemVariants}>
+              {(() => {
+                const displayName = formatDoctorName(leader.name);
+                const yearsCount = leader.yearsCount || (displayName.includes('Shital Punjabi') || displayName.includes('Rajesh Punjabi') ? '30+' : leader.experience);
+                const procedureCount = leader.procedureCount || (displayName.includes('Shital Punjabi') || displayName.includes('Rajesh Punjabi') ? '5000+' : '1000+');
+
+                return (
               <GradientCard gradient="soft" className="overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                   {/* Profile Image & Basic Info */}
@@ -141,10 +148,10 @@ const LeadersPage = () => {
                     <div className="text-center lg:text-left">
                       {/* Avatar */}
                       <div className="w-48 h-48 mx-auto lg:mx-0 rounded-3xl bg-gradient-to-br from-brand-teal to-brand-lavender text-white flex items-center justify-center text-4xl font-bold mb-6 shadow-xl relative overflow-hidden">
-                        {leader.photo ? (
+                      {leader.photo ? (
                           <img 
                             src={leader.photo} 
-                            alt={leader.name} 
+                            alt={displayName} 
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               // Fallback to initials if image fails to load
@@ -163,7 +170,7 @@ const LeadersPage = () => {
                       {/* Basic Info */}
                       <div className="space-y-3">
                         <h2 className="font-heading font-bold text-3xl text-brand-ink">
-                          {leader.name}
+                          {displayName}
                         </h2>
                         <p className="text-brand-muted font-medium text-lg">
                           {leader.designation}
@@ -174,13 +181,13 @@ const LeadersPage = () => {
                       </div>
 
                       {/* Key Stats */}
-                      <div className="mt-6 grid grid-cols-2 gap-4">
-                        <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
-                          <div className="text-2xl font-bold text-brand-teal">20+</div>
+                        <div className="mt-6 grid grid-cols-2 gap-4">
+                          <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
+                          <div className="text-2xl font-bold text-brand-teal">{yearsCount}</div>
                           <div className="text-xs text-brand-muted">Years</div>
                         </div>
                         <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
-                          <div className="text-2xl font-bold text-brand-coral">1000+</div>
+                          <div className="text-2xl font-bold text-brand-coral">{procedureCount}</div>
                           <div className="text-xs text-brand-muted">Procedures</div>
                         </div>
                       </div>
@@ -250,14 +257,14 @@ const LeadersPage = () => {
                             "{leader.quote}"
                           </p>
                           <footer className="text-brand-muted text-sm mt-2">
-                            - {leader.name}
+                            - {displayName}
                           </footer>
                         </blockquote>
                       </div>
                     </div>
 
                     {/* Special Recognition */}
-                    {leader.name.includes('Shital') && (
+                    {displayName.includes('Shital') && (
                       <div>
                         <h3 className="font-heading font-bold text-xl text-brand-ink mb-4 flex items-center">
                           <FaAward className="w-5 h-5 mr-3 text-brand-coral" />
@@ -268,7 +275,7 @@ const LeadersPage = () => {
                             <div>
                               <h4 className="font-semibold text-brand-ink mb-2">Academic Excellence</h4>
                               <ul className="space-y-2 text-sm text-brand-muted">
-                                <li>• Gold Medalist in D.G.O</li>
+                                <li>• Gold in D.G.O. + M.D.</li>
                                 <li>• FICOG Certification</li>
                                 <li>• ART Specialist Training (USA)</li>
                               </ul>
@@ -288,6 +295,8 @@ const LeadersPage = () => {
                   </div>
                 </div>
               </GradientCard>
+                );
+              })()}
             </motion.div>
           ))}
         </motion.div>

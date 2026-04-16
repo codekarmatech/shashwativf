@@ -6,6 +6,7 @@ import GradientCard from '../common/GradientCard';
 import Pill from '../common/Pill';
 import SectionHeader from '../common/SectionHeader';
 import { useLeaders } from '../../hooks/useApi';
+import { formatDoctorName } from '../../utils/doctors';
 
 const LeadersSection = () => {
   const { data: leaders, loading } = useLeaders();
@@ -84,6 +85,10 @@ const LeadersSection = () => {
         >
           {displayLeaders.map((leader, index) => (
             <motion.div key={leader.id} variants={itemVariants}>
+              {(() => {
+                const displayName = formatDoctorName(leader.name);
+
+                return (
               <GradientCard 
                 gradient="soft" 
                 className="p-8 lg:p-12"
@@ -95,7 +100,7 @@ const LeadersSection = () => {
                       {leader.photo ? (
                         <img 
                           src={leader.photo} 
-                          alt={leader.name} 
+                          alt={displayName} 
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             // Fallback to initials if image fails to load
@@ -128,7 +133,7 @@ const LeadersSection = () => {
                   <div className="flex-1">
                     <div className="mb-4">
                       <h3 className="font-heading font-bold text-2xl md:text-3xl text-brand-ink mb-2">
-                        {leader.name}
+                        {displayName}
                       </h3>
                       <p className="text-brand-muted font-medium mb-3">
                         {leader.designation}
@@ -193,6 +198,8 @@ const LeadersSection = () => {
                   </div>
                 </div>
               </GradientCard>
+                );
+              })()}
             </motion.div>
           ))}
         </motion.div>

@@ -94,7 +94,7 @@ const FinalCTA = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-white/60 rounded-full" />
-                <span>20+ Years Experience</span>
+                <span>{clinicInfo.metrics.yearsExperience} Years Experience</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-white/60 rounded-full" />

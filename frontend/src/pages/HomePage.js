@@ -22,7 +22,7 @@ const HomePage = () => {
         />
         <meta name="keywords" content="IVF Ahmedabad, fertility treatment, egg freezing, women's hospital, NABH accredited, Dr Shital Punjabi, FOGSI training centre" />
         <meta property="og:title" content="Shashwat IVF & Women's Hospital - Premier Fertility Care in Ahmedabad" />
-        <meta property="og:description" content="NABH-accredited fertility center offering comprehensive IVF, egg freezing, and women's health services with 20+ years of expertise." />
+        <meta property="og:description" content="NABH-accredited fertility center offering comprehensive IVF, egg freezing, and women's health services with decades of expertise." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://shashwativf.com/" />
       </Helmet>

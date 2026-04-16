@@ -32,14 +32,14 @@ def populate_doctors():
     """Populate doctor profiles"""
     # Dr. Shital Punjabi
     dr_shital, created = Doctor.objects.get_or_create(
-        name="Shital Punjabi",
+        name="Dr. Shital Punjabi",
         defaults={
             "designation": "Consultant Gynecologist & Surgeon",
-            "qualifications": "M.D., D.G.O., Diploma in Gynec Endoscopy (CICE, France)",
-            "experience": "20+ years in Gynecology, 10+ years in ART Experience",
+            "qualifications": "M.D., D.G.O. (Gold in D.G.O. + M.D.), FICOG, ART Specialist (USA)",
+            "experience": "30+ years",
             "specialties": ["IVF & ART", "Gynecologic Endoscopy", "Cosmetic Gynecology", "Fertility Treatments", "Egg Freezing"],
-            "highlights": ["Gold Medal in D.G.O", "FICOG Certified", "International Faculty", "NABH Accredited Center", "Advanced Reproductive Technology Specialist"],
-            "bio": "Dr. Shital Punjabi is a renowned fertility specialist with over 20 years of experience in gynecology and reproductive medicine. She has been instrumental in helping thousands of couples achieve their dream of parenthood through advanced fertility treatments and personalized care.",
+            "highlights": ["Gold in D.G.O. + M.D.", "FICOG Certified", "International Faculty", "Advanced Reproductive Technology Specialist"],
+            "bio": "Dr. Shital Punjabi is a renowned fertility specialist with 30+ years of experience in gynecology and reproductive medicine. She has been instrumental in helping thousands of couples achieve their dream of parenthood through advanced fertility treatments and personalized care.",
             "quote": "Every individual deserves the opportunity to experience the joys of parenthood. We believe in personalized care and empowering guidance throughout your fertility journey.",
             "is_leader": True,
             "category": "Doctor",
@@ -49,14 +49,14 @@ def populate_doctors():
     
     # Dr. Rajesh Punjabi
     dr_rajesh, created = Doctor.objects.get_or_create(
-        name="Rajesh Punjabi",
+        name="Dr. Rajesh Punjabi",
         defaults={
             "designation": "Consultant Gynecologist & Surgeon",
             "qualifications": "M.D., M.S., Advanced Laparoscopy Training",
-            "experience": "25+ years in Gynecology, 15+ years in Advanced Surgery",
+            "experience": "30+ years",
             "specialties": ["Advanced Laparoscopy", "Gynecologic Surgery", "Infertility Surgery", "Endoscopy", "Minimally Invasive Surgery"],
             "highlights": ["Advanced Laparoscopy Expert", "International Training", "Surgical Excellence", "FOGSI Member", "25+ Years Experience"],
-            "bio": "Dr. Rajesh Punjabi is an expert in advanced gynecologic surgery and laparoscopy with over 25 years of experience. He specializes in minimally invasive surgical techniques and has trained internationally in advanced reproductive surgery.",
+            "bio": "Dr. Rajesh Punjabi is an expert in advanced gynecologic surgery and laparoscopy with 30+ years of experience. He specializes in minimally invasive surgical techniques and has trained internationally in advanced reproductive surgery.",
             "quote": "Precision in surgery and compassion in care - these are the foundations of successful treatments.",
             "is_leader": True,
             "category": "Doctor",

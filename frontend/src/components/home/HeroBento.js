@@ -68,7 +68,7 @@ const HeroBento = () => {
                 <span className="text-sm font-medium text-brand-ink">{clinicInfo.tagline}</span>
               </div>
               <div className="bg-brand-coral/10 rounded-full px-4 py-2 border border-brand-coral/20">
-                <span className="text-sm font-medium text-brand-coral">20+ Years Excellence</span>
+                <span className="text-sm font-medium text-brand-coral">{clinicInfo.metrics.yearsExperience} Years Excellence</span>
               </div>
             </div>
             
