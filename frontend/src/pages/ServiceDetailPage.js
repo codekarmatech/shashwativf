@@ -9,15 +9,20 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { PrimaryButton, SecondaryButton } from '../components/common/Button';
-import { useService } from '../hooks/useApi';
-import { services } from '../data/services';
+import { useService, useServices } from '../hooks/useApi';
+import { useClinicInfoData } from '../hooks/useClinicInfoData';
+import { normalizeService, normalizeServices } from '../utils/content';
 
 const ServiceDetailPage = () => {
   const { slug } = useParams();
   const { data: apiService, loading, error } = useService(slug);
+  const { data: apiServices } = useServices();
+  const { data: clinicInfo } = useClinicInfoData();
   
-  // Fallback to mock data if API fails
-  const service = apiService || services.find(s => s.slug === slug);
+  const service = normalizeService(apiService);
+  const relatedServices = normalizeServices(apiServices || [])
+    .filter((item) => item.category === service?.category && item.id !== service?.id)
+    .slice(0, 3);
 
   if (loading) {
     return (
@@ -158,7 +163,7 @@ const ServiceDetailPage = () => {
                   </h2>
                   <div className="prose prose-lg text-brand-muted">
                     <p className="mb-4">
-                      {service.detailed_description || service.detailedDescription || `${service.title} is a comprehensive fertility treatment offered at Shashwat IVF & Women's Hospital. Our experienced team of specialists uses advanced techniques and state-of-the-art equipment to provide personalized care for each patient.`}
+                      {service.detailedDescription || `${service.title} is a comprehensive fertility treatment offered at Shashwat IVF & Women's Hospital. Our experienced team of specialists uses advanced techniques and state-of-the-art equipment to provide personalized care for each patient.`}
                     </p>
                     <p className="mb-4">
                       We understand that every fertility journey is unique, which is why we take a personalized approach to treatment planning. Our team will work closely with you to develop a treatment plan that addresses your specific needs and circumstances.
@@ -348,7 +353,7 @@ const ServiceDetailPage = () => {
                     <PrimaryButton to="/contact" size="lg" className="w-full" icon={<FaCalendarAlt className="w-4 h-4" />}>
                       Book Consultation
                     </PrimaryButton>
-                    <SecondaryButton href="tel:+917567672781" size="lg" className="w-full">
+                    <SecondaryButton href={`tel:${clinicInfo.contact.phone.appointments}`} size="lg" className="w-full">
                       Call Now
                     </SecondaryButton>
                   </div>
@@ -393,10 +398,7 @@ const ServiceDetailPage = () => {
               Related Services
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {services
-                .filter(s => s.category === service.category && s.id !== service.id)
-                .slice(0, 3)
-                .map((relatedService) => {
+              {relatedServices.map((relatedService) => {
                   const RelatedIcon = iconMap[relatedService.icon] || require('react-icons/fa').FaHeart;
                   return (
                     <Link key={relatedService.id} to={`/services/${relatedService.slug}`}>

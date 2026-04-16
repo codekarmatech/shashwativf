@@ -9,15 +9,16 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { PrimaryButton } from '../components/common/Button';
-import { useBlogPost } from '../hooks/useApi';
-import { blogPosts } from '../data/blog';
+import { useBlogPost, useBlogPosts } from '../hooks/useApi';
+import { normalizeBlogPost, normalizeBlogPosts } from '../utils/content';
 
 const BlogDetailPage = () => {
   const { slug } = useParams();
   const { data: apiPost, loading, error } = useBlogPost(slug);
+  const { data: apiBlogPosts } = useBlogPosts();
   
-  // Fallback to mock data if API fails
-  const post = apiPost || blogPosts.find(p => p.slug === slug);
+  const post = normalizeBlogPost(apiPost);
+  const allPosts = normalizeBlogPosts(apiBlogPosts || []);
 
   if (loading) {
     return (
@@ -52,7 +53,7 @@ const BlogDetailPage = () => {
     );
   }
 
-  const relatedPosts = blogPosts
+  const relatedPosts = allPosts
     .filter(p => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
@@ -164,7 +165,7 @@ const BlogDetailPage = () => {
       </Section>
 
       {/* Featured Image */}
-      {post.featured_image && (
+      {post.featuredImage && (
         <Section padding="sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -175,7 +176,7 @@ const BlogDetailPage = () => {
               className="relative overflow-hidden rounded-2xl shadow-2xl"
             >
               <img 
-                src={post.featured_image} 
+                src={post.featuredImage} 
                 alt={post.title}
                 className="w-full h-48 md:h-64 lg:h-80 object-cover"
               />

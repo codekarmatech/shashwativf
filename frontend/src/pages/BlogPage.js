@@ -10,15 +10,15 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useBlogPosts } from '../hooks/useApi';
-import { blogPosts, blogCategories } from '../data/blog';
+import { normalizeBlogPosts, buildCategoryList } from '../utils/content';
 
 const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const { data: apiBlogPosts, loading, error } = useBlogPosts();
   
-  // Fallback to mock data if API fails or returns empty
-  const displayPosts = apiBlogPosts?.length > 0 ? apiBlogPosts : blogPosts;
+  const displayPosts = normalizeBlogPosts(apiBlogPosts || []);
+  const blogCategories = buildCategoryList(displayPosts);
 
   const filteredPosts = displayPosts.filter(post => {
     const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
@@ -161,7 +161,7 @@ const BlogPage = () => {
                       ? 'bg-white/20 text-white'
                       : 'bg-brand-tealSoft text-brand-teal'
                   }`}>
-                    {category === 'All' ? blogPosts.length : blogPosts.filter(p => p.category === category).length}
+                    {category === 'All' ? displayPosts.length : displayPosts.filter(p => p.category === category).length}
                   </span>
                 </button>
               ))}
@@ -191,10 +191,10 @@ const BlogPage = () => {
                 <Link to={`/blog/${post.slug}`}>
                   <GradientCard gradient="soft" className="h-full p-8 hover:shadow-card-hover transition-all duration-300">
                     {/* Featured Image */}
-                    {post.featured_image && (
+                    {post.featuredImage && (
                       <div className="mb-6 -mx-8 -mt-8">
                         <img 
-                          src={post.featured_image} 
+                          src={post.featuredImage} 
                           alt={post.title}
                           className="w-full h-56 object-cover"
                         />
@@ -279,10 +279,10 @@ const BlogPage = () => {
               <Link to={`/blog/${post.slug}`}>
                 <GradientCard gradient="soft" className="h-full p-6 hover:shadow-card-hover transition-all duration-300">
                   {/* Featured Image */}
-                  {post.featured_image && (
+                  {post.featuredImage && (
                     <div className="mb-4 -mx-6 -mt-6">
                       <img 
-                        src={post.featured_image} 
+                        src={post.featuredImage} 
                         alt={post.title}
                         className="w-full h-48 object-cover"
                       />

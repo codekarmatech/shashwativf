@@ -9,15 +9,15 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useServices } from '../hooks/useApi';
-import { services, serviceCategories } from '../data/services';
+import { normalizeServices, buildCategoryList } from '../utils/content';
 
 const ServicesPage = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const { data: apiServices, loading, error } = useServices();
   
-  // Fallback to mock data if API fails
-  const displayServices = apiServices?.length > 0 ? apiServices : services;
+  const displayServices = normalizeServices(apiServices || []);
+  const serviceCategories = buildCategoryList(displayServices);
 
   const iconMap = {
     FaFlask: FaFlask,
@@ -32,7 +32,7 @@ const ServicesPage = () => {
 
   const filteredServices = displayServices.filter(service => {
     const matchesCategory = activeCategory === 'All' || service.category === activeCategory;
-    const description = service.short_description || service.shortDescription || '';
+    const description = service.shortDescription || '';
     const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;

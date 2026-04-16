@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaPhone, FaCalendarAlt, FaHeart } from 'react-icons/fa';
 import { PrimaryButton, SecondaryButton } from '../common/Button';
-import { clinicInfo } from '../../data/clinic';
+import { useClinicInfoData } from '../../hooks/useClinicInfoData';
 
 const FinalCTA = () => {
+  const { data: clinicInfo } = useClinicInfoData();
+
   return (
     <section className="py-16 lg:py-24 bg-gradient-to-br from-brand-teal via-brand-teal to-brand-lavender relative overflow-hidden">
       {/* Background Elements */}

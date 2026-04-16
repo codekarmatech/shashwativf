@@ -8,13 +8,15 @@ import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import { PrimaryButton } from '../components/common/Button';
 import apiService from '../api/apiService';
-import { useClinicInfo } from '../hooks/useApi';
+import { useClinicInfo, useServices } from '../hooks/useApi';
 import { normalizeClinicInfo } from '../utils/clinicInfo';
-import { services } from '../data/services';
+import { normalizeServices } from '../utils/content';
 
 const ContactPage = () => {
   const { data: apiClinicInfo } = useClinicInfo();
+  const { data: apiServices } = useServices();
   const displayClinicInfo = normalizeClinicInfo(apiClinicInfo);
+  const services = normalizeServices(apiServices || []);
   const encodedAddress = encodeURIComponent(displayClinicInfo.contact.address.full);
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;

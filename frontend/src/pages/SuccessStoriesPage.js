@@ -8,14 +8,14 @@ import Pill from '../components/common/Pill';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PageError from '../components/common/PageError';
 import { useSuccessStories } from '../hooks/useApi';
-import { successStories, storyCategories } from '../data/stories';
+import { normalizeSuccessStories, buildCategoryList } from '../utils/content';
 
 const SuccessStoriesPage = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const { data: apiSuccessStories, loading, error } = useSuccessStories();
   
-  // Fallback to mock data if API fails or returns empty
-  const displayStories = apiSuccessStories?.length > 0 ? apiSuccessStories : successStories;
+  const displayStories = normalizeSuccessStories(apiSuccessStories || []);
+  const storyCategories = buildCategoryList(displayStories);
 
   const filteredStories = activeCategory === 'All' 
     ? displayStories 
@@ -153,7 +153,7 @@ const SuccessStoriesPage = () => {
                   ? 'bg-white/20 text-white'
                   : 'bg-brand-tealSoft text-brand-teal'
               }`}>
-                {category === 'All' ? successStories.length : successStories.filter(s => s.category === category).length}
+                {category === 'All' ? displayStories.length : displayStories.filter(s => s.category === category).length}
               </span>
             </button>
           ))}

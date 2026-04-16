@@ -3,11 +3,12 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { FaMapMarkerAlt, FaHeart, FaGraduationCap, FaAward } from 'react-icons/fa';
 import MetricCard from '../common/MetricCard';
-import { clinicInfo } from '../../data/clinic';
+import { useClinicInfoData } from '../../hooks/useClinicInfoData';
 
 const ImpactMetrics = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { data: clinicInfo } = useClinicInfoData();
 
   const metrics = [
     {

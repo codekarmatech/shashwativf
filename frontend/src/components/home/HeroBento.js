@@ -2,10 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaSnowflake, FaHeart } from 'react-icons/fa';
 import { PrimaryButton, SecondaryButton } from '../common/Button';
-import { clinicInfo } from '../../data/clinic';
 import { OutlineButton } from '../common/Button';
+import { useClinicInfoData } from '../../hooks/useClinicInfoData';
 
 const HeroBento = () => {
+  const { data: clinicInfo } = useClinicInfoData();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -80,8 +82,7 @@ const HeroBento = () => {
               </h1>
               
               <p className="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-2xl">
-                Comprehensive fertility and women's health services under one roof with ethical, 
-                transparent care. From IVF to egg freezing, we're here to support your dreams of parenthood.
+                {clinicInfo.description}
               </p>
             </div>
             
@@ -126,27 +127,27 @@ const HeroBento = () => {
                 <div className="grid grid-cols-2 gap-6 mb-8">
                   <div className="text-center">
                     <div className="text-3xl font-bold bg-gradient-to-r from-brand-teal to-brand-coral bg-clip-text text-transparent mb-2">
-                      20,000+
+                      {clinicInfo.metrics.livesImpacted}
                     </div>
                     <div className="text-sm text-gray-600">Lives Impacted</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold bg-gradient-to-r from-brand-teal to-brand-coral bg-clip-text text-transparent mb-2">
-                      65%
+                      {clinicInfo.metrics.successRate}
                     </div>
                     <div className="text-sm text-gray-600">Success Rate</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold bg-gradient-to-r from-brand-teal to-brand-coral bg-clip-text text-transparent mb-2">
-                      91+
+                      {clinicInfo.metrics.townsReached}
                     </div>
                     <div className="text-sm text-gray-600">Towns Reached</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold bg-gradient-to-r from-brand-teal to-brand-coral bg-clip-text text-transparent mb-2">
-                      24/7
+                      {clinicInfo.metrics.yearsExperience}
                     </div>
-                    <div className="text-sm text-gray-600">Support</div>
+                    <div className="text-sm text-gray-600">Years Experience</div>
                   </div>
                 </div>
                 

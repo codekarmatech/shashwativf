@@ -8,9 +8,11 @@ import GradientCard from '../components/common/GradientCard';
 import MetricCard from '../components/common/MetricCard';
 import Pill from '../components/common/Pill';
 import { PrimaryButton } from '../components/common/Button';
-import { clinicInfo, timeline } from '../data/clinic';
+import { timeline } from '../data/clinic';
+import { useClinicInfoData } from '../hooks/useClinicInfoData';
 
 const AboutPage = () => {
+  const { data: clinicInfo } = useClinicInfoData();
   const values = [
     {
       icon: <FaHeart className="w-8 h-8" />,

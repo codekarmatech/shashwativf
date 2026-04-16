@@ -5,11 +5,17 @@ import GradientCard from '../common/GradientCard';
 import Pill from '../common/Pill';
 import SectionHeader from '../common/SectionHeader';
 import { PrimaryButton } from '../common/Button';
-import { successStories } from '../../data/stories';
+import { useSuccessStories } from '../../hooks/useApi';
+import { normalizeSuccessStories } from '../../utils/content';
 
 const SuccessStoriesPreview = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const featuredStories = successStories.slice(0, 4);
+  const { data: apiSuccessStories } = useSuccessStories();
+  const featuredStories = normalizeSuccessStories(apiSuccessStories || []).slice(0, 4);
+
+  if (!featuredStories.length) {
+    return null;
+  }
 
   const nextStory = () => {
     setCurrentIndex((prev) => (prev + 1) % featuredStories.length);

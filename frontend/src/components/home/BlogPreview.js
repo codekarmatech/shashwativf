@@ -6,12 +6,16 @@ import GradientCard from '../common/GradientCard';
 import Pill from '../common/Pill';
 import SectionHeader from '../common/SectionHeader';
 import { GhostButton } from '../common/Button';
-import { blogPosts } from '../../data/blog';
+import { useBlogPosts } from '../../hooks/useApi';
+import { normalizeBlogPosts, buildCategoryList } from '../../utils/content';
 
 const BlogPreview = () => {
-  const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 2);
-  const recentPosts = blogPosts.filter(post => !post.featured).slice(0, 1);
+  const { data: apiBlogPosts } = useBlogPosts();
+  const posts = normalizeBlogPosts(apiBlogPosts || []);
+  const featuredPosts = posts.filter(post => post.featured).slice(0, 2);
+  const recentPosts = posts.filter(post => !post.featured).slice(0, 1);
   const displayPosts = [...featuredPosts, ...recentPosts];
+  const previewCategories = buildCategoryList(posts).filter((category) => category !== 'All').slice(0, 5);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -107,7 +111,7 @@ const BlogPreview = () => {
                       </div>
                       <div className="flex items-center space-x-1">
                         <FaClock className="w-3 h-3" />
-                        <span>{post.readTime}</span>
+                      <span>{post.readTime}</span>
                       </div>
                     </div>
                   </div>
@@ -161,7 +165,7 @@ const BlogPreview = () => {
           <div className="mb-8">
             <h4 className="font-semibold text-brand-ink mb-4">Explore Topics</h4>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Egg Freezing', 'IVF Basics', 'Male Factor', 'Women\'s Health', 'Support & Wellness'].map((category, index) => (
+              {previewCategories.map((category, index) => (
                 <Link
                   key={index}
                   to={`/blog?category=${encodeURIComponent(category)}`}
