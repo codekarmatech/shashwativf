@@ -1,27 +1,35 @@
 const DOCTOR_PREFIX_TARGETS = new Set(['Shital Punjabi', 'Rajesh Punjabi']);
 
+const normalizeDoctorName = (name = '') =>
+  name
+    .trim()
+    .replace(/^Dr\.?\s*/i, '')
+    .replace(/\s+/g, ' ');
+
 export const formatDoctorName = (name = '') => {
   const trimmedName = name.trim();
+  const normalizedName = normalizeDoctorName(trimmedName);
 
   if (!trimmedName) {
     return '';
   }
 
-  if (trimmedName.startsWith('Dr. ')) {
-    return trimmedName;
+  if (/^Dr\.?/i.test(trimmedName)) {
+    return `Dr. ${normalizedName}`;
   }
 
-  if (DOCTOR_PREFIX_TARGETS.has(trimmedName)) {
-    return `Dr. ${trimmedName}`;
+  if (DOCTOR_PREFIX_TARGETS.has(normalizedName)) {
+    return `Dr. ${normalizedName}`;
   }
 
-  return trimmedName;
+  return normalizedName;
 };
 
 export const enrichDoctorProfile = (doctor = {}) => {
   const formattedName = formatDoctorName(doctor.name);
+  const normalizedName = normalizeDoctorName(doctor.name);
 
-  if (doctor.name === 'Shital Punjabi' || doctor.name === 'Dr. Shital Punjabi') {
+  if (normalizedName === 'Shital Punjabi') {
     return {
       ...doctor,
       name: formattedName,
@@ -41,7 +49,7 @@ export const enrichDoctorProfile = (doctor = {}) => {
     };
   }
 
-  if (doctor.name === 'Rajesh Punjabi' || doctor.name === 'Dr. Rajesh Punjabi') {
+  if (normalizedName === 'Rajesh Punjabi') {
     return {
       ...doctor,
       name: formattedName,
