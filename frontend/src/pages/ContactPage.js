@@ -8,10 +8,17 @@ import GradientCard from '../components/common/GradientCard';
 import Pill from '../components/common/Pill';
 import { PrimaryButton } from '../components/common/Button';
 import apiService from '../api/apiService';
-import { clinicInfo } from '../data/clinic';
+import { useClinicInfo } from '../hooks/useApi';
+import { normalizeClinicInfo } from '../utils/clinicInfo';
 import { services } from '../data/services';
 
 const ContactPage = () => {
+  const { data: apiClinicInfo } = useClinicInfo();
+  const displayClinicInfo = normalizeClinicInfo(apiClinicInfo);
+  const encodedAddress = encodeURIComponent(displayClinicInfo.contact.address.full);
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+  const mapEmbedUrl = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -152,20 +159,20 @@ const ContactPage = () => {
                     <div className="space-y-2 text-brand-muted">
                       <div className="flex justify-between">
                         <span>Front Desk:</span>
-                        <a href={`tel:${clinicInfo.contact.phone.frontDesk}`} className="text-brand-teal hover:text-brand-ink font-medium">
-                          {clinicInfo.contact.phone.frontDesk}
+                        <a href={`tel:${displayClinicInfo.contact.phone.frontDesk}`} className="text-brand-teal hover:text-brand-ink font-medium">
+                          {displayClinicInfo.contact.phone.frontDesk}
                         </a>
                       </div>
                       <div className="flex justify-between">
                         <span>Appointments:</span>
-                        <a href={`tel:${clinicInfo.contact.phone.appointments}`} className="text-brand-teal hover:text-brand-ink font-medium">
-                          {clinicInfo.contact.phone.appointments}
+                        <a href={`tel:${displayClinicInfo.contact.phone.appointments}`} className="text-brand-teal hover:text-brand-ink font-medium">
+                          {displayClinicInfo.contact.phone.appointments}
                         </a>
                       </div>
                       <div className="flex justify-between">
                         <span>Emergency:</span>
-                        <a href={`tel:${clinicInfo.contact.phone.emergency}`} className="text-brand-coral hover:text-brand-ink font-medium">
-                          {clinicInfo.contact.phone.emergency}
+                        <a href={`tel:${displayClinicInfo.contact.phone.emergency}`} className="text-brand-coral hover:text-brand-ink font-medium">
+                          {displayClinicInfo.contact.phone.emergency}
                         </a>
                       </div>
                     </div>
@@ -184,14 +191,14 @@ const ContactPage = () => {
                     <div className="space-y-2 text-brand-muted">
                       <div className="flex justify-between">
                         <span>General Inquiries:</span>
-                        <a href={`mailto:${clinicInfo.contact.email.general}`} className="text-brand-teal hover:text-brand-ink font-medium">
-                          {clinicInfo.contact.email.general}
+                        <a href={`mailto:${displayClinicInfo.contact.email.general}`} className="text-brand-teal hover:text-brand-ink font-medium">
+                          {displayClinicInfo.contact.email.general}
                         </a>
                       </div>
                       <div className="flex justify-between">
                         <span>Appointments:</span>
-                        <a href={`mailto:${clinicInfo.contact.email.appointments}`} className="text-brand-teal hover:text-brand-ink font-medium">
-                          {clinicInfo.contact.email.appointments}
+                        <a href={`mailto:${displayClinicInfo.contact.email.appointments}`} className="text-brand-teal hover:text-brand-ink font-medium">
+                          {displayClinicInfo.contact.email.appointments}
                         </a>
                       </div>
                     </div>
@@ -208,11 +215,16 @@ const ContactPage = () => {
                   <div className="flex-1">
                     <h3 className="font-bold text-brand-ink mb-2">Address</h3>
                     <p className="text-brand-muted">
-                      {clinicInfo.contact.address.full}
+                      {displayClinicInfo.contact.address.full}
                     </p>
-                    <button className="mt-2 text-brand-teal hover:text-brand-ink font-medium text-sm">
+                    <a
+                      href={directionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block text-brand-teal hover:text-brand-ink font-medium text-sm"
+                    >
                       View on Map →
-                    </button>
+                    </a>
                   </div>
                 </div>
               </GradientCard>
@@ -228,15 +240,15 @@ const ContactPage = () => {
                     <div className="space-y-2 text-brand-muted text-sm">
                       <div className="flex justify-between">
                         <span>Monday - Friday:</span>
-                        <span>{clinicInfo.contact.hours.weekdays}</span>
+                        <span>{displayClinicInfo.contact.hours.weekdays}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Saturday:</span>
-                        <span>{clinicInfo.contact.hours.saturday}</span>
+                        <span>{displayClinicInfo.contact.hours.saturday}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Sunday:</span>
-                        <span>{clinicInfo.contact.hours.sunday}</span>
+                        <span>{displayClinicInfo.contact.hours.sunday}</span>
                       </div>
                     </div>
                   </div>
@@ -252,8 +264,8 @@ const ContactPage = () => {
                   <h3 className="font-bold mb-2">Emergency Care</h3>
                   <p className="text-white/90 text-sm">
                     For urgent medical situations, please call our emergency line at{' '}
-                    <a href={`tel:${clinicInfo.contact.phone.emergency}`} className="font-bold underline">
-                      {clinicInfo.contact.phone.emergency}
+                    <a href={`tel:${displayClinicInfo.contact.phone.emergency}`} className="font-bold underline">
+                      {displayClinicInfo.contact.phone.emergency}
                     </a>{' '}
                     or visit our hospital directly.
                   </p>
@@ -434,14 +446,14 @@ const ContactPage = () => {
                 <div className="bg-white rounded-3xl overflow-hidden shadow-card">
                   <div className="h-96 bg-gray-200 relative">
                     <iframe
-                      src="https://www.openstreetmap.org/export/embed.html?bbox=72.4890%2C23.0225%2C72.4920%2C23.0255&layer=mapnik&marker=23.024%2C72.4905"
+                      src={mapEmbedUrl}
                       className="w-full h-full border-0"
-                      title="Shashwat IVF Location Map"
+                      title={`${displayClinicInfo.name} location map`}
                     />
                     <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-lg">
                       <div className="flex items-center space-x-2">
                         <FaMapMarkerAlt className="w-4 h-4 text-brand-coral" />
-                        <span className="font-semibold text-brand-ink text-sm">Shashwat IVF</span>
+                        <span className="font-semibold text-brand-ink text-sm">{displayClinicInfo.name}</span>
                       </div>
                     </div>
                   </div>
@@ -457,21 +469,10 @@ const ContactPage = () => {
                   </h3>
                   <div className="space-y-4 text-sm">
                     <div>
-                      <h4 className="font-semibold text-brand-ink mb-1">Shashwat IVF Centre Pvt. Ltd.</h4>
+                      <h4 className="font-semibold text-brand-ink mb-1">{displayClinicInfo.name}</h4>
                       <p className="text-brand-muted leading-relaxed">
-                        2nd Floor, Nilkanth Palace, 'B' Opp.Seema Hall,<br />
-                        Anandnagar, Satellite,<br />
-                        Ahmedabad - 380015, Gujarat, India
+                        {displayClinicInfo.contact.address.full}
                       </p>
-                    </div>
-                    <div className="pt-4 border-t border-brand-tealSoft/30">
-                      <h4 className="font-semibold text-brand-ink mb-2">Landmarks</h4>
-                      <ul className="text-brand-muted space-y-1">
-                        <li>• Opposite Seema Hall</li>
-                        <li>• Near Anandnagar Road</li>
-                        <li>• Satellite Area</li>
-                        <li>• Close to SG Highway</li>
-                      </ul>
                     </div>
                   </div>
                 </GradientCard>
@@ -482,20 +483,20 @@ const ContactPage = () => {
                   </h3>
                   <div className="space-y-3 text-sm">
                     <p className="text-white/90">
-                      Located in the heart of Satellite, easily accessible by car, auto-rickshaw, or public transport.
+                      Use your preferred maps app to navigate directly to our latest clinic address.
                     </p>
                     <div className="space-y-2">
                       <div>
-                        <span className="font-semibold">By Car:</span>
-                        <p className="text-white/90">Take SG Highway → Satellite → Anandnagar Road</p>
+                        <span className="font-semibold">Address:</span>
+                        <p className="text-white/90">{displayClinicInfo.contact.address.full}</p>
                       </div>
                       <div>
-                        <span className="font-semibold">Parking:</span>
-                        <p className="text-white/90">Available at Nilkanth Palace</p>
+                        <span className="font-semibold">Appointments:</span>
+                        <p className="text-white/90">{displayClinicInfo.contact.phone.appointments}</p>
                       </div>
                     </div>
                     <a 
-                      href="https://www.google.com/maps/dir/?api=1&destination=23.024,72.4905"
+                      href={directionsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block mt-4 px-4 py-2 bg-white/20 text-white rounded-xl font-medium hover:bg-white/30 transition-colors"

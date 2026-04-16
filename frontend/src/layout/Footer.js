@@ -1,9 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebook, FaInstagram, FaYoutube, FaLinkedin } from 'react-icons/fa';
-import { clinicInfo } from '../data/clinic';
+import { useClinicInfo } from '../hooks/useApi';
+import { normalizeClinicInfo } from '../utils/clinicInfo';
 
 const Footer = () => {
+  const { data: apiClinicInfo } = useClinicInfo();
+  const displayClinicInfo = normalizeClinicInfo(apiClinicInfo);
+
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
@@ -15,11 +19,11 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { name: 'Facebook', href: clinicInfo.socialMedia.facebook, icon: FaFacebook },
-    { name: 'Instagram', href: clinicInfo.socialMedia.instagram, icon: FaInstagram },
-    { name: 'YouTube', href: clinicInfo.socialMedia.youtube, icon: FaYoutube },
-    { name: 'LinkedIn', href: clinicInfo.socialMedia.linkedin, icon: FaLinkedin }
-  ];
+    { name: 'Facebook', href: displayClinicInfo.socialMedia.facebook, icon: FaFacebook },
+    { name: 'Instagram', href: displayClinicInfo.socialMedia.instagram, icon: FaInstagram },
+    { name: 'YouTube', href: displayClinicInfo.socialMedia.youtube, icon: FaYoutube },
+    { name: 'LinkedIn', href: displayClinicInfo.socialMedia.linkedin, icon: FaLinkedin }
+  ].filter((social) => social.href);
 
   return (
     <footer className="bg-brand-ink text-white">
@@ -29,32 +33,32 @@ const Footer = () => {
           {/* Contact Information */}
           <div>
             <div className="text-2xl font-heading font-bold mb-4">
-              Shashwat IVF
+              {displayClinicInfo.name}
             </div>
             <p className="text-gray-300 mb-6">
-              NABH-accredited IVF & Women's Hospital providing comprehensive fertility and women's health services with ethical, transparent care.
+              {displayClinicInfo.description}
             </p>
             
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <FaMapMarkerAlt className="w-4 h-4 mt-1 text-brand-coral flex-shrink-0" />
                 <div className="text-sm text-gray-300">
-                  {clinicInfo.contact.address.full}
+                  {displayClinicInfo.contact.address.full}
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
                 <FaPhone className="w-4 h-4 text-brand-coral" />
                 <div className="text-sm">
-                  <div>Front Desk: {clinicInfo.contact.phone.frontDesk}</div>
-                  <div>Appointments: {clinicInfo.contact.phone.appointments}</div>
+                  <div>Front Desk: {displayClinicInfo.contact.phone.frontDesk}</div>
+                  <div>Appointments: {displayClinicInfo.contact.phone.appointments}</div>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
                 <FaEnvelope className="w-4 h-4 text-brand-coral" />
                 <div className="text-sm text-gray-300">
-                  {clinicInfo.contact.email.general}
+                  {displayClinicInfo.contact.email.general}
                 </div>
               </div>
             </div>
@@ -93,19 +97,19 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Clinic Snapshot</h3>
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <div className="text-2xl font-bold text-brand-coral">{clinicInfo.metrics.townsReached}</div>
+                <div className="text-2xl font-bold text-brand-coral">{displayClinicInfo.metrics.townsReached}</div>
                 <div className="text-xs text-gray-300">Towns Reached</div>
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <div className="text-2xl font-bold text-brand-coral">{clinicInfo.metrics.livesImpacted}</div>
+                <div className="text-2xl font-bold text-brand-coral">{displayClinicInfo.metrics.livesImpacted}</div>
                 <div className="text-xs text-gray-300">Lives Impacted</div>
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <div className="text-2xl font-bold text-brand-coral">{clinicInfo.metrics.yearsExperience}</div>
+                <div className="text-2xl font-bold text-brand-coral">{displayClinicInfo.metrics.yearsExperience}</div>
                 <div className="text-xs text-gray-300">Years Experience</div>
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
-                <div className="text-2xl font-bold text-brand-coral">{clinicInfo.metrics.successRate}</div>
+                <div className="text-2xl font-bold text-brand-coral">{displayClinicInfo.metrics.successRate}</div>
                 <div className="text-xs text-gray-300">Success Rate</div>
               </div>
             </div>

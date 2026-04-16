@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaPhone } from 'react-icons/fa';
 import { useClinicInfo } from '../hooks/useApi';
-import { clinicInfo } from '../data/clinic';
+import { normalizeClinicInfo } from '../utils/clinicInfo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { data: apiClinicInfo } = useClinicInfo();
-  const displayClinicInfo = apiClinicInfo || clinicInfo;
+  const displayClinicInfo = normalizeClinicInfo(apiClinicInfo);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -89,11 +89,11 @@ const Header = () => {
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
-              href={`tel:${displayClinicInfo.appointments_phone || displayClinicInfo.contact?.phone?.appointments}`}
+              href={`tel:${displayClinicInfo.contact.phone.appointments}`}
               className="text-sm font-medium text-brand-teal hover:text-brand-ink transition-colors duration-200 flex items-center space-x-2"
             >
               <FaPhone className="w-3 h-3" />
-              <span>{displayClinicInfo.appointments_phone || displayClinicInfo.contact?.phone?.appointments}</span>
+              <span>{displayClinicInfo.contact.phone.appointments}</span>
             </a>
             <Link
               to="/contact"
@@ -156,7 +156,7 @@ const Header = () => {
               {/* Mobile CTA */}
               <div className="pt-4 pb-2 space-y-2">
                 <a
-                  href={`tel:${displayClinicInfo.appointments_phone || displayClinicInfo.contact?.phone?.appointments}`}
+                  href={`tel:${displayClinicInfo.contact.phone.appointments}`}
                   className="block w-full text-center bg-brand-teal text-white px-4 py-3 rounded-full text-sm font-medium"
                 >
                   Call Now
