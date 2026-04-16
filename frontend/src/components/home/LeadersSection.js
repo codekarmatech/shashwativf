@@ -111,12 +111,16 @@ const LeadersSection = () => {
                       </div>
                     </div>
                     <div className="space-y-2 text-center lg:text-left">
-                      <div className="text-lg font-semibold text-brand-ink">
-                        {leader.experience || "20+ years in Gynecology"}
-                      </div>
-                      <div className="text-base text-brand-muted font-medium">
-                        {leader.qualifications || "Advanced Medical Qualifications"}
-                      </div>
+                      {leader.experience && (
+                        <div className="text-lg font-semibold text-brand-ink">
+                          {leader.experience}
+                        </div>
+                      )}
+                      {leader.qualifications && (
+                        <div className="text-base text-brand-muted font-medium">
+                          {leader.qualifications}
+                        </div>
+                      )}
                     </div>
                   </div>
 

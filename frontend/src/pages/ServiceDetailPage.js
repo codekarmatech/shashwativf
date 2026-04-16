@@ -162,15 +162,11 @@ const ServiceDetailPage = () => {
                     About This Treatment
                   </h2>
                   <div className="prose prose-lg text-brand-muted">
-                    <p className="mb-4">
-                      {service.detailedDescription || `${service.title} is a comprehensive fertility treatment offered at Shashwat IVF & Women's Hospital. Our experienced team of specialists uses advanced techniques and state-of-the-art equipment to provide personalized care for each patient.`}
-                    </p>
-                    <p className="mb-4">
-                      We understand that every fertility journey is unique, which is why we take a personalized approach to treatment planning. Our team will work closely with you to develop a treatment plan that addresses your specific needs and circumstances.
-                    </p>
-                    <p>
-                      At Shashwat IVF, we are committed to providing ethical, transparent, and compassionate care throughout your fertility journey. Our NABH-accredited facility ensures the highest standards of safety and quality.
-                    </p>
+                    {service.detailedDescription ? (
+                      <p className="mb-4 whitespace-pre-line">{service.detailedDescription}</p>
+                    ) : (
+                      <p className="mb-4">Detailed treatment information is not available for this service yet.</p>
+                    )}
                   </div>
                 </GradientCard>
               </motion.div>
@@ -186,8 +182,9 @@ const ServiceDetailPage = () => {
                   <h2 className="font-heading font-bold text-2xl text-brand-ink mb-6">
                     Treatment Process
                   </h2>
-                  <div className="space-y-4">
-                    {service.processSteps?.map((step, index) => (
+                  {service.processSteps?.length ? (
+                    <div className="space-y-4">
+                      {service.processSteps.map((step, index) => (
                       <div key={index} className="flex items-start space-x-4">
                         <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
                           {index + 1}
@@ -197,47 +194,11 @@ const ServiceDetailPage = () => {
                           <p className="text-brand-muted text-sm">{step.description}</p>
                         </div>
                       </div>
-                    )) || (
-                      // Default process steps
-                      <>
-                        <div className="flex items-start space-x-4">
-                          <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-                          <div>
-                            <h3 className="font-semibold text-brand-ink mb-1">Initial Consultation</h3>
-                            <p className="text-brand-muted text-sm">Comprehensive evaluation and medical history review</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-4">
-                          <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
-                          <div>
-                            <h3 className="font-semibold text-brand-ink mb-1">Diagnostic Tests</h3>
-                            <p className="text-brand-muted text-sm">Necessary tests and evaluations to determine the best approach</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-4">
-                          <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
-                          <div>
-                            <h3 className="font-semibold text-brand-ink mb-1">Treatment Planning</h3>
-                            <p className="text-brand-muted text-sm">Personalized treatment plan based on your specific needs</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-4">
-                          <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
-                          <div>
-                            <h3 className="font-semibold text-brand-ink mb-1">Treatment Execution</h3>
-                            <p className="text-brand-muted text-sm">Careful monitoring and execution of the treatment plan</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-4">
-                          <div className="w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
-                          <div>
-                            <h3 className="font-semibold text-brand-ink mb-1">Follow-up Care</h3>
-                            <p className="text-brand-muted text-sm">Ongoing support and monitoring throughout your journey</p>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-brand-muted">Treatment process details are not available for this service yet.</p>
+                  )}
                 </GradientCard>
               </motion.div>
 
@@ -252,42 +213,18 @@ const ServiceDetailPage = () => {
                   <h2 className="font-heading font-bold text-2xl text-brand-ink mb-6">
                     Benefits & Advantages
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {service.benefits?.map((benefit, index) => (
+                  {service.benefits?.length ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {service.benefits.map((benefit, index) => (
                       <div key={index} className="flex items-start space-x-3">
                         <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                         <span className="text-brand-muted">{benefit}</span>
                       </div>
-                    )) || (
-                      // Default benefits
-                      <>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">Personalized treatment approach</span>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">Advanced medical technology</span>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">Experienced medical team</span>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">Comprehensive support</span>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">NABH accredited facility</span>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <FaCheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="text-brand-muted">Ethical and transparent care</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-brand-muted">Benefits and advantages are not available for this service yet.</p>
+                  )}
                 </GradientCard>
               </motion.div>
             </div>

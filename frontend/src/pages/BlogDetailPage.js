@@ -201,56 +201,14 @@ const BlogDetailPage = () => {
                 <GradientCard gradient="soft" className="p-8">
                   {/* Article Body */}
                   <div className="prose prose-lg max-w-none text-brand-muted">
-                    {/* This would be the actual article content from Django backend */}
-                    <p className="mb-6">
-                      {post.content || `This is the detailed content for "${post.title}". In a real implementation, this content would be fetched from the Django backend and could include rich text formatting, images, and other media elements.`}
-                    </p>
-                    
-                    <p className="mb-6">
-                      At Shashwat IVF & Women's Hospital, we understand that every fertility journey is unique. Our team of experienced specialists is committed to providing personalized care that addresses your specific needs and circumstances.
-                    </p>
-
-                    <h2 className="font-heading font-bold text-2xl text-brand-ink mt-8 mb-4">
-                      Understanding Your Options
-                    </h2>
-                    
-                    <p className="mb-6">
-                      When it comes to fertility treatments, knowledge is power. We believe in educating our patients about all available options so they can make informed decisions about their care. Our comprehensive approach includes:
-                    </p>
-
-                    <ul className="mb-6 space-y-2">
-                      <li>• Thorough initial consultations and evaluations</li>
-                      <li>• Advanced diagnostic testing and analysis</li>
-                      <li>• Personalized treatment planning</li>
-                      <li>• Ongoing support throughout your journey</li>
-                      <li>• Transparent communication about success rates and expectations</li>
-                    </ul>
-
-                    <h2 className="font-heading font-bold text-2xl text-brand-ink mt-8 mb-4">
-                      Our Commitment to Excellence
-                    </h2>
-                    
-                    <p className="mb-6">
-                      As a NABH-accredited facility and FOGSI Certified Training Centre, we maintain the highest standards of medical care. Our state-of-the-art laboratory and equipment ensure that you receive the most advanced treatments available.
-                    </p>
-
-                    <p className="mb-6">
-                      We also believe in the importance of emotional support during your fertility journey. Our compassionate team is here to guide you every step of the way, providing not just medical expertise but also understanding and encouragement.
-                    </p>
-
-                    <div className="bg-brand-tealSoft/20 rounded-2xl p-6 my-8">
-                      <h3 className="font-bold text-brand-ink mb-3">Key Takeaways</h3>
-                      <ul className="space-y-2 text-brand-muted">
-                        <li>• Every fertility journey is unique and requires personalized care</li>
-                        <li>• Education and informed decision-making are crucial</li>
-                        <li>• Advanced technology combined with compassionate care yields the best results</li>
-                        <li>• Emotional support is just as important as medical treatment</li>
-                      </ul>
-                    </div>
-
-                    <p>
-                      If you have questions about fertility treatments or would like to schedule a consultation, we encourage you to reach out to our team. We're here to help you navigate your fertility journey with confidence and hope.
-                    </p>
+                    {post.content ? (
+                      <p className="mb-6 whitespace-pre-line">{post.content}</p>
+                    ) : (
+                      <div className="bg-brand-tealSoft/20 rounded-2xl p-6 my-4">
+                        <h3 className="font-bold text-brand-ink mb-2">Content Not Available</h3>
+                        <p>The full article content has not been published yet.</p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Tags */}
